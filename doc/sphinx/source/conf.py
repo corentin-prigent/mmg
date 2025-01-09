@@ -18,9 +18,9 @@ author = 'Prigent'
 
 read_the_docs_build = os.environ.get('READTHEDOCS', None) == 'True'
 
-#if read_the_docs_build:
+if read_the_docs_build:
 
-subprocess.call('cd ../../build/doc; doxygen', shell=True)
+     subprocess.call('cd ../../../build/doc; doxygen', shell=True)
 
 #sys.path.append(pathlib.Path('/Users/corentin/python/lib/python3.13/site-packages/breathe'))
 
@@ -29,7 +29,7 @@ extensions = ['sphinx_math_dollar','sphinx.ext.mathjax','breathe']
 templates_path = ['_templates']
 exclude_patterns = []
 
-breathe_projects = {"mmg-doxy": "../../build/doc/xml"}
+breathe_projects = {"mmg-doxy": "../../../build/doc/xml"}
 breathe_default_project = "mmg-doxy"
 
 # -- Options for HTML output -------------------------------------------------
