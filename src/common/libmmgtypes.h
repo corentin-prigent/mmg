@@ -608,8 +608,8 @@ typedef struct {
 /**
  * \struct MMG5_Mesh
  * \brief MMG mesh structure.
- * \todo try to remove nc1;
  */
+// todo try to remove nc1;
 typedef struct {
   size_t    memMax; /*!< Maximum memory available */
   size_t    memCur; /*!< Current memory used */
@@ -630,7 +630,7 @@ typedef struct {
   MMG5_int  nenil; /*!< Index of first unused element */
   MMG5_int  nanil; /*!< Index of first unused edge (2d only)*/
   MMG5_int  *adja; /*!< Table of tetrahedron adjacency: if
-                    \f$adja[4*(i-1)+1+j]=4*k+l\f$ then the \f$i^{th}\f$ and
+                    \f$\text{adja}[4*(i-1)+1+j]=4*k+l\f$ then the \f$i^{th}\f$ and
                     \f$k^th\f$ tetrahedra are adjacent and share their
                     faces \a j and \a l (resp.) */
   MMG5_int  *adjt; /*!< Table of triangles adjacency: if
