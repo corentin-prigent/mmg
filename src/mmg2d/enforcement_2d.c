@@ -183,10 +183,10 @@ int MMG2D_bdryenforcement(MMG5_pMesh mesh,MMG5_pSol sol) {
 
       /* Randomly swap edges in the list, while... */
       ilon = lon;
-      srand(time(NULL));
-
+      //srand(0);
+      rnd = -1;
       while ( ilon > 0 ) {
-        rnd = ( rand() % lon );
+        rnd++;
         k   = list[rnd] / 3;
 
         /* Check for triangle k in the pipe until one triangle with base+1 is met (indicating that it is
