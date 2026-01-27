@@ -1,11 +1,12 @@
 import os
 
 class mmgFunction():
-    def __init__(self,name,rtype,args,encode):
+    def __init__(self,name,rtype,args,encode,dim):
         self.name = name
         self.return_type = rtype
         self.args = args
         self.str_encode = encode
+        self.dim = dim
 
 class arg():
     def __init__(self,arg_name,arg_type,arg_pointer=0):
@@ -77,14 +78,14 @@ class pythonAPI:
 
         def writeFunctionResArgs(f,fn):
             if (not fn.str_encode):
-                f.write("lib." + fn.name + ".argtypes = (")
+                f.write("lib" + fn.dim + fn.name + ".argtypes = (")
                 for a in fn.args:
                     if (a.pointer):
                         f.write("ctypes.POINTER(" + a.type + "),")
                     else:
                         f.write(a.type + ",")
                 f.write(")\n")
-            f.write("lib." + fn.name + ".restype  = ")
+            f.write("lib" + fn.dim + fn.name + ".restype  = ")
             f.write(fn.return_type)
             f.write("\n\n")
 
@@ -110,7 +111,7 @@ class pythonAPI:
                 f.write(indentfn)
             if (not (fn.return_type == "None")):
                 f.write("ier = ")
-            f.write("lib." + fn.name + "(")
+            f.write("lib" + fn.dim + fn.name + "(")
             for a in fn.args:
                 if (not (a == fn.args[-1])):
                     comma = ","
@@ -151,10 +152,12 @@ import ctypes
 import os
 from enum import IntEnum
 
-lib = ctypes.CDLL("{libpath}")
+lib2d = ctypes.CDLL("{libpath2d}")
+lib3d = ctypes.CDLL("{libpath3d}")
+libs  = ctypes.CDLL("{libpaths}")
 
 MMG5_int = "ctypes.c_int"
 
 MMG2D_LMAX = 1024
 
-""".format(libpath=os.getenv("SHARED_LIB_FILE2D"))
+""".format(libpath2d=os.getenv("SHARED_LIB_FILE2D"),libpath3d=os.getenv("SHARED_LIB_FILE3D"),libpaths=os.getenv("SHARED_LIB_FILES"))

@@ -15,10 +15,11 @@ def setAPIFunctions(api : pythonAPI):
     }
 
     header_file_path = []
-    #header_file_path.append(os.getenv("HEADER3D_FILE"))
+    header_file_path.append(os.getenv("HEADER3D_FILE"))
     header_file_path.append(os.getenv("HEADER2D_FILE"))
-    #header_file_path.append(os.getenv("HEADERS_FILE"))
+    header_file_path.append(os.getenv("HEADERS_FILE"))
     for file in header_file_path:
+        dim      = (re.search(r"(3d|2d|s)\.",file)).group(0)
         header   = open(file,"r")
         # read each prototype found in libmmg3d.h
         # manipulate strings to extract each piece of information: return type,
@@ -93,14 +94,14 @@ def setAPIFunctions(api : pythonAPI):
                                 var_name = var_name + "0"
                             arglist.append(arg(var_name,var_type,ptr))
 
-                        func = mmgFunction(name,restype,arglist,str_encode)
+                        func = mmgFunction(name,restype,arglist,str_encode,dim)
                         api.addFunction(func)
 
 def setAPIEnums(api : pythonAPI):
     header_file_path = []
-    #header_file_path.append(os.getenv("HEADER3D_FILE"))
+    header_file_path.append(os.getenv("HEADER3D_FILE"))
     header_file_path.append(os.getenv("HEADER2D_FILE"))
-    #header_file_path.append(os.getenv("HEADERS_FILE"))
+    header_file_path.append(os.getenv("HEADERS_FILE"))
     for file in header_file_path:
         header   = open(file,"r")
         enum_start = 0
