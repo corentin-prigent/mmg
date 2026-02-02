@@ -64,19 +64,19 @@ def setAPIFunctions(api : pythonAPI):
                             var_type = item_split[0+offset]
                             if (var_type != "void"):
                                 var_name = item_split[1+offset]
-                            if ((var_type.find("_p") != -1) or (var_type.find("*") != -1) and (var_type.find("char") == -1)):
+                            #if ((var_type.find("_p") != -1) or (var_type.find("*") != -1) and (var_type.find("char") == -1)):
+                            if ((var_type.find("_p") != -1) and (var_type.find("char") == -1)):
                                 ptr = 1
                                 var_type = var_type.replace("_p","_")
                                 var_type = var_type.replace("*","")
                             elif ((var_name.find("*") != -1 ) and (var_type.find("char") != -1 )):
                                 ptr = 0
-                                #var_name = var_name.replace("*","")
-                                #var_type = "char*"
                                 var_name = "name"
                                 var_type = "str"
                                 str_encode = 1
-                            elif ((var_name.find("*") != -1)):
-                                ptr = 1
+                            elif ((var_name.find("*") != -1) or (var_type.find("*") != -1)):
+                                ptr = 2
+                                var_type = var_type.replace("*","")
                                 var_name = var_name.replace("*","")
                             else:
                                 ptr = 0

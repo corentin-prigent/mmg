@@ -93,7 +93,7 @@ class pythonAPI:
             indentfn = "    "
             f.write("def " + fn.name + "(")
             for a in fn.args:
-                if (a == "str"):
+                if ((a == "str") or (a.pointer == 2)):
                     if (not (a == fn.args[-1])):
                         f.write(a.name + ",")
                     else:
@@ -117,8 +117,10 @@ class pythonAPI:
                     comma = ","
                 else:
                     comma = ""
-                if (a.pointer):
+                if (a.pointer == 1):
                     f.write("ctypes.byref(" + a.name + ")" + comma)
+                elif (a.pointer == 2):
+                    f.write(a.name + ".ctypes.data_as(ctypes.POINTER(" + a.type + "))" + comma)
                 else:
                     f.write(a.name + comma)
             f.write(")")
