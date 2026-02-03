@@ -76,18 +76,18 @@ class pythonAPI:
                 for co in cl.construct:
                     f.write(2*indentcl + "self." + co[0] + " = " + str(co[1]) + "\n\n")
 
-        def writeFunctionResArgs(f,fn):
-            if (not fn.str_encode):
-                f.write("lib" + fn.dim + fn.name + ".argtypes = (")
-                for a in fn.args:
-                    if (a.pointer):
-                        f.write("ctypes.POINTER(" + a.type + "),")
-                    else:
-                        f.write(a.type + ",")
-                f.write(")\n")
-            f.write("lib" + fn.dim + fn.name + ".restype  = ")
-            f.write(fn.return_type)
-            f.write("\n\n")
+       # def writeFunctionResArgs(f,fn):
+       #     if (not fn.str_encode):
+       #         f.write("lib" + fn.dim + fn.name + ".argtypes = (")
+       #         for a in fn.args:
+       #             if (a.pointer):
+       #                 f.write("ctypes.POINTER(" + a.type + "),")
+       #             else:
+       #                 f.write(a.type + ",")
+       #         f.write(")\n")
+       #     f.write("lib" + fn.dim + fn.name + ".restype  = ")
+       #     f.write(fn.return_type)
+       #     f.write("\n\n")
 
         def writeFunction(f, fn):
             indentfn = "    "
@@ -98,6 +98,8 @@ class pythonAPI:
                         f.write(a.name + ",")
                     else:
                         f.write(a.name)
+                elif (a.pointer == 3):
+                    continue
                 else:
                     if (not (a == fn.args[-1])):
                         f.write(a.name + ": " + a.type + ",")
@@ -110,9 +112,16 @@ class pythonAPI:
                 f.write(indentfn + indentfn + "name = ctypes.c_char_p(name.encode('utf-8'))\n")
                 f.write(indentfn)
             if (not (fn.return_type == "None")):
-                f.write("ier = ")
+                f.write("ier")
+            for a in fn.args:
+                if (a.pointer == 3):
+                    f.write(", " + a.name)
+            if (not (fn.return_type == "None")):
+                f.write(" = ")
             f.write("lib" + fn.dim + fn.name + "(")
             for a in fn.args:
+                if (a.pointer == 3):
+                    continue
                 if (not (a == fn.args[-1])):
                     comma = ","
                 else:
@@ -144,8 +153,8 @@ class pythonAPI:
                 writeEnum(f,en)
             for cl in self.classes:
                 writeClass(f,cl)
-            for fn in self.functions:
-                writeFunctionResArgs(f,fn)
+            #for fn in self.functions:
+            #    writeFunctionResArgs(f,fn)
             for fn in self.functions:
                 writeFunction(f,fn)
 

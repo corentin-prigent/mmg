@@ -14,6 +14,9 @@ def setAPIFunctions(api : pythonAPI):
         "str"     : "str"
     }
 
+    var_list = ["sol","typSol","vertices","refs","areCorners","areRequired",
+                "tria","quadra","edges","areRidges","s","sols"]
+
     header_file_path = []
     header_file_path.append(os.getenv("HEADER3D_FILE"))
     header_file_path.append(os.getenv("HEADER2D_FILE"))
@@ -78,6 +81,8 @@ def setAPIFunctions(api : pythonAPI):
                                 ptr = 2
                                 var_type = var_type.replace("*","")
                                 var_name = var_name.replace("*","")
+                                if (var_name not in var_list):
+                                    ptr = 3
                             else:
                                 ptr = 0
                             if (var_type.find("MMG5_") == -1):
