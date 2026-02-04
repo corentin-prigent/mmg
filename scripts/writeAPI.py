@@ -91,21 +91,34 @@ class pythonAPI:
 
         def writeFunction(f, fn):
             indentfn = "    "
-            f.write("def " + fn.name + "(")
+            comma = ","
+            def_line = ""
+            def_line += "def " + fn.name + "("
             for a in fn.args:
                 if ((a == "str") or (a.pointer == 2)):
-                    if (not (a == fn.args[-1])):
-                        f.write(a.name + ",")
-                    else:
-                        f.write(a.name)
+                    def_line += a.name + ","
                 elif (a.pointer == 3):
                     continue
                 else:
-                    if (not (a == fn.args[-1])):
-                        f.write(a.name + ": " + a.type + ",")
-                    else:
-                        f.write(a.name + ": " + a.type)
-            f.write("):\n")
+                    def_line += a.name + ": " + a.type + ","
+            def_line += "):\n"
+            def_line = def_line.replace(",)",")")
+            f.write(def_line)
+            #f.write("def " + fn.name + "(")
+            #for a in fn.args:
+            #    if ((a == "str") or (a.pointer == 2)):
+            #        if (not (a == fn.args[-1])):
+            #            f.write(a.name + ",")
+            #        else:
+            #            f.write(a.name)
+            #    elif (a.pointer == 3):
+            #        continue
+            #    else:
+            #        if (not (a == fn.args[-1])):
+            #            f.write(a.name + ": " + a.type + ",")
+            #        else:
+            #            f.write(a.name + ": " + a.type)
+            #f.write("):\n")
             f.write(indentfn)
             if (fn.str_encode):
                 f.write("if (isinstance(name,str)):\n")
@@ -113,29 +126,39 @@ class pythonAPI:
                 f.write(indentfn)
             if (not (fn.return_type == "None")):
                 f.write("ier")
-            for a in fn.args:
-                if (a.pointer == 3):
-                    f.write(", " + a.name)
+            #for a in fn.args:
+            #    if (a.pointer == 3):
+            #        f.write(", " + a.name)
             if (not (fn.return_type == "None")):
                 f.write(" = ")
             f.write("lib" + fn.dim + fn.name + "(")
+            arg_line = ""
             for a in fn.args:
-                if (a.pointer == 3):
-                    continue
-                if (not (a == fn.args[-1])):
-                    comma = ","
-                else:
-                    comma = ""
+                #if (a.pointer == 3):
+                #    continue
                 if (a.pointer == 1):
-                    f.write("ctypes.byref(" + a.name + ")" + comma)
-                elif (a.pointer == 2):
-                    f.write(a.name + ".ctypes.data_as(ctypes.POINTER(" + a.type + "))" + comma)
+                    arg_line += "ctypes.byref(" + a.name + ")" + comma
+                    #f.write("ctypes.byref(" + a.name + ")" + comma)
+                elif (a.pointer == 2 or a.pointer == 3):
+                    arg_line += a.name + ".ctypes.data_as(ctypes.POINTER(" + a.type + "))" + comma
+                    #f.write(a.name + ".ctypes.data_as(ctypes.POINTER(" + a.type + "))" + comma)
                 else:
-                    f.write(a.name + comma)
-            f.write(")")
+                    arg_line += a.name + comma
+                    #f.write(a.name + comma)
+            arg_line += ")"
+            arg_line = arg_line.replace(",)",")")
+            #f.write(")")
+            f.write(arg_line)
             f.write("\n")
             if (not (fn.return_type == "None")):
-                f.write(indentfn + "return ier\n")
+                #f.write(indentfn + "return ier,")
+                return_line = indentfn + "return ier,"
+                for a in fn.args:
+                    if (a.pointer == 3):
+                        return_line += " " + a.name + ","
+                return_line += "\n"
+                return_line = return_line.replace(",\n","\n")
+                f.write(return_line)
             f.write("\n")
 
         def writeEnum(f,en):
