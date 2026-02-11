@@ -453,17 +453,17 @@ ADD_TEST(NAME mmg3d_hybrid-nsd1
 # fem 0/1/2
 ADD_TEST(NAME mmg3d_fem_0
   COMMAND ${EXECUT_MMG3D} -v 5 -fem 0
-  ${MMG3D_CI_TEST}/Cube/cube
+  ${MMG3D_CI_TESTS}/Cube/cube
   -out ${CTEST_OUTPUT_DIR}/mmg3d_fem0.o.meshb)
 
 ADD_TEST(NAME mmg3d_fem_1
   COMMAND ${EXECUT_MMG3D} -v 5 -fem 1
-  ${MMG3D_CI_TEST}/Cube/cube
+  ${MMG3D_CI_TESTS}/Cube/cube
   -out ${CTEST_OUTPUT_DIR}/mmg3d_fem1.o.meshb)
 
 ADD_TEST(NAME mmg3d_fem_2
   COMMAND ${EXECUT_MMG3D} -v 5 -fem 2
-  ${MMG3D_CI_TEST}/Cube/cube
+  ${MMG3D_CI_TESTS}/Cube/cube
   -out ${CTEST_OUTPUT_DIR}/mmg3d_fem2.o.meshb)
 
 ###############################################################################
