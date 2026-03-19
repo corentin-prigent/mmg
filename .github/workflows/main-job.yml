@@ -254,14 +254,14 @@ jobs:
           make install
 
       # checkout the provided branch name if workflow is manually run
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         if: inputs.branch_name
         with:
           ref: ${{github.event.inputs.branch}}
           path: mmg
 
       # checkout the event branch for automatic workflows
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         if: inputs.branch_name == ''
         with:
           path: mmg
@@ -365,7 +365,7 @@ jobs:
 
       - name: Archive production artifacts
         if: success() || failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: build-${{ matrix.os }}-${{ matrix.pattern }}-${{ matrix.pointmap }}-${{ matrix.scotch }}-${{ matrix.vtk }}-${{ matrix.int }}
           path: |
@@ -378,18 +378,18 @@ jobs:
     steps:
     - name: Checkout repository
       # Codecov need the source code to pair with coverage
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         path: mmg
 
     - name: Download coverage artifact
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v6
       with:
         pattern: build-ubuntu-*
 
     - name: Upload coverage to Codecov
       if: inputs.code_coverage == true
-      uses: codecov/codecov-action@v4
+      uses: codecov/codecov-action@v6
       with:
         fail_ci_if_error: false
         root_dir: .
