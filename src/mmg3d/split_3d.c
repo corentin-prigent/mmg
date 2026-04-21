@@ -51,6 +51,7 @@ extern int8_t  ddb;
  */
 inline
 void MMG3D_split1_cfg(MMG5_int flag,uint8_t *tau,const uint8_t **taued) {
+  //printf("split1_cfg\n");
 
   /* default is case 1 */
   tau[0] = 0 ; tau[1] = 1 ; tau[2] = 2 ; tau[3] = 3;
@@ -92,6 +93,7 @@ void MMG3D_split1_cfg(MMG5_int flag,uint8_t *tau,const uint8_t **taued) {
  *
  */
 int MMG3D_split1_sim(MMG5_pMesh mesh,MMG5_pSol met,MMG5_int k,MMG5_int vx[6]) {
+  //printf("split1_sim\n");
   MMG5_pTetra         pt,pt0;
   double              vold,vnew;
   uint8_t             tau[4];
@@ -132,6 +134,7 @@ int MMG3D_split1_sim(MMG5_pMesh mesh,MMG5_pSol met,MMG5_int k,MMG5_int vx[6]) {
  *
  */
 int MMG5_split1(MMG5_pMesh mesh,MMG5_pSol met,MMG5_int k,MMG5_int vx[6],int8_t metRidTyp) {
+  //printf("split1\n");
   MMG5_pTetra         pt,pt1;
   MMG5_xTetra         xt,xt1;
   MMG5_pxTetra        pxt0;
@@ -628,6 +631,7 @@ int MMG5_split1b_eltspl(MMG5_pMesh mesh,MMG5_int ip,MMG5_int k,int64_t *list,MMG
  */
 int MMG5_split1b(MMG5_pMesh mesh, MMG5_pSol met,int64_t *list, int ret, MMG5_int ip,
                   int cas,int8_t metRidTyp,int8_t chkRidTet){
+  //printf("ici");
   MMG5_pTetra          pt,pt1,pt0;
   double               lmin,lmax,len;
   int                  ilist,k,open,j;
@@ -1101,6 +1105,7 @@ void MMG3D_split2sf_cfg(MMG5_int flag,MMG5_int v[4],uint8_t *tau,const uint8_t *
  *
  */
 int MMG3D_split2sf_sim(MMG5_pMesh mesh,MMG5_pSol met,MMG5_int k,MMG5_int vx[6]){
+  //printf("ici\n");
   MMG5_pTetra         pt,pt0;
   double              vold,vnew;
   uint8_t             tau[4],imin;
@@ -1252,6 +1257,7 @@ void MMG3D_update_qual(MMG5_pMesh mesh,MMG5_pSol met,const int ne,
  *
  */
 int MMG5_split2sf(MMG5_pMesh mesh,MMG5_pSol met,MMG5_int k,MMG5_int vx[6],int8_t metRidTyp){
+  //printf("ihhhhhci\n");
   MMG5_pTetra    pt;
 
   /* Tetra to be split */
@@ -1274,6 +1280,7 @@ int MMG5_split2sf(MMG5_pMesh mesh,MMG5_pSol met,MMG5_int k,MMG5_int vx[6],int8_t
  *
  */
 int MMG5_split2sf_globNum(MMG5_pMesh mesh,MMG5_pSol met,MMG5_int k,MMG5_int vx[6],MMG5_int vGlobNum[4],int8_t metRidTyp){
+  //printf("MMG5_split2sf_globNum\n");
   MMG5_pTetra         pt[3];
   MMG5_xTetra         xt[3];
   MMG5_pxTetra        pxt0;
@@ -1487,6 +1494,7 @@ int MMG3D_split2_sim(MMG5_pMesh mesh,MMG5_pSol met,MMG5_int k,MMG5_int vx[6]){
  *
  */
 int MMG5_split2(MMG5_pMesh mesh,MMG5_pSol met,MMG5_int k,MMG5_int vx[6],int8_t metRidTyp) {
+  //printf("test\n");
   MMG5_pTetra         pt[4];
   MMG5_xTetra         xt[4];
   MMG5_pxTetra        pxt0;
@@ -1705,6 +1713,7 @@ int MMG3D_split3_sim(MMG5_pMesh mesh,MMG5_pSol met,MMG5_int k,MMG5_int vx[6]) {
  *
  */
 int MMG5_split3(MMG5_pMesh mesh,MMG5_pSol met,MMG5_int k,MMG5_int vx[6],int8_t metRidTyp) {
+  //printf("ici\n");
   MMG5_pTetra         pt[4];
   MMG5_xTetra         xt[4];
   MMG5_pxTetra        pxt0;

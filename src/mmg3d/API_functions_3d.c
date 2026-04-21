@@ -44,6 +44,7 @@
 #include "PRoctree_3d_private.h"
 
 int MMG3D_Init_mesh(const int starter,...) {
+  printf("[DEBUG] MMG3D_Init_mesh dans API_functions_3d.c\n");
   va_list argptr;
   int     ier;
 
@@ -52,7 +53,8 @@ int MMG3D_Init_mesh(const int starter,...) {
   ier = MMG3D_Init_mesh_var(argptr);
 
   va_end(argptr);
-
+  //printf("Valeur de ier dans MMG3D_Init_mesh : %d\n",ier);
+  printf("[DEBUG] Fin de MMG3D_Init_mesh\n");
   return ier;
 }
 void MMG3D_Init_fileNames(MMG5_pMesh mesh,MMG5_pSol sol
@@ -114,7 +116,6 @@ void MMG3D_Init_parameters(MMG5_pMesh mesh) {
 }
 
 int MMG3D_Set_solSize(MMG5_pMesh mesh, MMG5_pSol sol, int typEntity, MMG5_int np, int typSol) {
-
   if ( ( (mesh->info.imprim > 5) || mesh->info.ddebug ) && sol->m )
     fprintf(stderr,"\n  ## Warning: %s: old solution deletion.\n",__func__);
 
@@ -142,7 +143,6 @@ int MMG3D_Set_solSize(MMG5_pMesh mesh, MMG5_pSol sol, int typEntity, MMG5_int np
             __func__);
     return 0;
   }
-
   sol->dim = 3;
   if ( np ) {
     sol->np  = np;
@@ -2582,6 +2582,6 @@ int MMG3D_Free_names(const int starter,...)
   ier = MMG3D_Free_names_var(argptr);
 
   va_end(argptr);
-
+  //printf("Valeur de ier dans Free_names %d\n",ier);
   return ier;
 }

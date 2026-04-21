@@ -273,6 +273,7 @@ int MMG2D_defaultOption(MMG5_pMesh mesh,MMG5_pSol met,MMG5_pSol sol) {
 }
 
 int main(int argc,char *argv[]) {
+//  printf("cc\n");
   MMG5_pMesh    mesh;
   MMG5_pSol     sol,met,disp,ls;
   int           ier,ierSave,fmtin,fmtout;
@@ -282,7 +283,6 @@ int main(int argc,char *argv[]) {
    * and stdout to print in the same order as the events */
   setvbuf(stdout, NULL, _IOLBF, 1024);
   setvbuf(stderr, NULL, _IOLBF, 1024);
-
   /* Version info */
 #ifndef MMG_COMPARABLE_OUTPUT
   fprintf(stdout,"  -- MMG2D, Release %s (%s) \n",MMG_VERSION_RELEASE,MMG_RELEASE_DATE);
@@ -390,7 +390,7 @@ int main(int argc,char *argv[]) {
         MMG2D_RETURN_AND_FREE(mesh,met,ls,disp,MMG5_STRONGFAILURE);
       }
     }
-
+    
     /* In iso mode: read metric if any and give a name to the metric*/
     if ( ( mesh->info.iso || mesh->info.isosurf ) ) {
       if (met->namein) {
@@ -443,7 +443,7 @@ int main(int argc,char *argv[]) {
     printim(MMG5_ctim[1].gdif,stim);
     fprintf(stdout,"  -- DATA READING COMPLETED.     %s\n",stim);
   }
-
+  
   if ( mesh->mark ) {
     /* Save a local parameters file containing the default parameters */
     ier = MMG2D_defaultOption(mesh,met,disp);
@@ -520,7 +520,7 @@ int main(int argc,char *argv[]) {
     chrono(OFF,&MMG5_ctim[1]);
     if ( mesh->info.imprim > 0 ) fprintf(stdout,"  -- WRITING COMPLETED\n");
   }
-
+  
   /* free mem */
   MMG2D_RETURN_AND_FREE(mesh,met,ls,disp,ier);
 }

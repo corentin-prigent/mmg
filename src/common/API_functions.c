@@ -814,6 +814,7 @@ const char* MMG5_Get_tagName(uint16_t tag)
  *
  */
 int MMG5_Get_format( char *ptr, int fmt ) {
+  printf("[DEBUG] MMG5_Get_format dans API_functions.c\n");
   /* Default is the Medit file format or a format given as input */
   int defFmt = fmt;
 
@@ -822,7 +823,9 @@ int MMG5_Get_format( char *ptr, int fmt ) {
   if ( !strncmp ( ptr,".meshb",strlen(".meshb") ) ) {
     return MMG5_FMT_MeditBinary;
   }
-  else if ( !strncmp( ptr,".mesh",strlen(".mesh") ) ) {
+  else if ( !strncmp( ptr,".mesh",strlen(".mesh") ) ) {   
+    printf("[DEBUG] extension .mesh donc on sort %d:\n",MMG5_FMT_MeditASCII);
+    printf("[DEBUG] Fin de MMG5_Get_format\n");
     return MMG5_FMT_MeditASCII;
   }
   else if ( !strncmp( ptr,".mshb",strlen(".mshb") ) ) {
@@ -849,7 +852,7 @@ int MMG5_Get_format( char *ptr, int fmt ) {
   else if ( !strncmp ( ptr,".node",strlen(".node") ) ) {
     return MMG5_FMT_Tetgen;
   }
-
+  printf("[DEBUG] Fin de MMG5_Get_format\n");
   return defFmt;
 }
 
@@ -910,6 +913,7 @@ const char* MMG5_Get_formatName(enum MMG5_Format fmt)
  *
  */
 char *MMG5_Get_filenameExt( char *filename ) {
+  printf("[DEBUG] MMG5_Get_filenameExt dans API_functions.c\n");
   const char pathsep='/';
   char       *dot,*lastpath;
 
@@ -924,7 +928,8 @@ char *MMG5_Get_filenameExt( char *filename ) {
     /* No extension */
     return filename + strlen(filename);
   }
-
+  printf("[DEBUG] extension %s\n",dot);
+  printf("[DEBUG] Fin de MMG5_Get_filenameExt\n");
   return dot;
 }
 

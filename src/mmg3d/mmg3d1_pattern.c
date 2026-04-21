@@ -51,6 +51,7 @@
  *
  */
 static MMG5_int MMG5_adpspl(MMG5_pMesh mesh,MMG5_pSol met, int* warn) {
+ //printf("[DEBUG] print\n");
  MMG5_pTetra   pt;
  MMG5_pxTetra  pxt;
  MMG5_pPoint   p0,p1;
@@ -256,6 +257,7 @@ static MMG5_int MMG5_adpcol(MMG5_pMesh mesh,MMG5_pSol met) {
  *
  */
 static int MMG5_adptet(MMG5_pMesh mesh,MMG5_pSol met,MMG5_int *permNodGlob) {
+  //printf("test\n");
   int      it1,it,maxit;
   MMG5_int nf,nnf,nnm,nm,nnc,nc,nns,ns;
   int      warn;//,nw;
@@ -426,6 +428,7 @@ static int MMG5_adptet(MMG5_pMesh mesh,MMG5_pSol met,MMG5_int *permNodGlob) {
  *
  */
 int MMG5_mmg3d1_pattern(MMG5_pMesh mesh,MMG5_pSol met,MMG5_int *permNodGlob) {
+  printf("[DEBUG] MMG5_mmg3d1_pattern dans mmg3d1_pattern.c\n");
 
   if ( abs(mesh->info.imprim) > 4 )
     fprintf(stdout,"  ** MESH ANALYSIS\n");

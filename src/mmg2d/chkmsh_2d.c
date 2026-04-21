@@ -51,7 +51,7 @@ int MMG5_mmg2dChkmsh(MMG5_pMesh mesh, int severe,MMG5_int base) {
     if ( !MG_EOK(pt1) )  continue;
     iadr = (k-1)*3 + 1;
     adja = &mesh->adja[iadr];
-
+    
     for (i=0; i<3; i++) {
       adj = adja[i] / 3;
       voy = adja[i] % 3;

@@ -94,9 +94,10 @@ int MMG5_defsiz_startingMessage (MMG5_pMesh mesh,MMG5_pSol met,const char * func
  *
  */
 void MMG5_gradation_info ( MMG5_pMesh mesh ) {
-
+  printf("[DEBUG] MMG5_gradation_info dans isosiz.c\n");
   if ( mesh->info.imprim > 0 ) {
     if ( mesh->info.hgrad > 0. ) {
+      printf("[DEBUG] Print de la gradation:\n");
       fprintf(stdout,"\n  -- GRADATION : %8f ",
               exp(mesh->info.hgrad) );
       if ( mesh->info.hgradreq > 0. ) {
@@ -110,6 +111,7 @@ void MMG5_gradation_info ( MMG5_pMesh mesh ) {
       }
     }
   }
+  printf("[DEBUG] Fin de MMG5_gradation_info\n");
   return;
 }
 
@@ -276,6 +278,7 @@ void MMG5_mark_pointsOnReqEdge_fromTria (  MMG5_pMesh mesh ) {
  *
  */
 int MMG5_gradsiz_iso(MMG5_pMesh mesh,MMG5_pSol met) {
+  //printf("G\n");
   MMG5_pTria        pt;
   MMG5_pPoint       p1,p2;
   double            hgrad,ll,h1,h2,hn,val;

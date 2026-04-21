@@ -109,6 +109,7 @@ int MMG2D_anatri(MMG5_pMesh mesh,MMG5_pSol met,int8_t typchk) {
 
 /* Travel triangles and split long edges according to patterns */
 MMG5_int MMG2D_anaelt(MMG5_pMesh mesh,MMG5_pSol met,int typchk) {
+  //printf("ici\n");
   MMG5_pTria      pt;
   MMG5_pPoint     ppt,p1,p2;
   MMG5_Hash       hash;
@@ -817,6 +818,7 @@ MMG5_int MMG2D_movtri(MMG5_pMesh mesh,MMG5_pSol met,int maxit,int8_t improve) {
  *
  **/
 int MMG2D_mmg2d1n(MMG5_pMesh mesh,MMG5_pSol met) {
+  printf("Debug MMG2D_mmg2d1n");
 
   /* Stage 1: creation of a geometric mesh */
   if ( abs(mesh->info.imprim) > 4 || mesh->info.ddebug )
@@ -839,10 +841,23 @@ int MMG2D_mmg2d1n(MMG5_pMesh mesh,MMG5_pSol met) {
   if ( abs(mesh->info.imprim) > 4 || mesh->info.ddebug ){
     fprintf(stdout,"  ** COMPUTATIONAL MESH\n");
 }
+//ICI %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   if ( !MMG2D_defsiz(mesh,met) ) {
     fprintf(stderr,"  ## Metric undefined. Exit program.\n");
     return 0;
   }
+    printf("Après MMG2D_defsiz(mesh,met) met->m[1] = %f\n\n", met->m[1]);
+  /*
+  if ( met && met->m && met->size == 1 ) {
+    printf("\n  [DEBUG] Valeurs calculees par defsiz (10 premiers points) :\n");
+    // On boucle de 1 jusqu'à 10 (ou le max de points s'il y en a moins)
+    for ( int k = 1; k <= mesh->np && k <= 100; k++ ) {
+      // On s'assure que le point n'a pas été supprimé de la mémoire
+      if ( MG_VOK(&mesh->point[k]) ) { 
+         printf("    Point n°%d -> Taille calculee (met->m) = %f\n", k, met->m[k]);
+      }
+  }
+  */
 
   /* Debug: export variable MMG_SAVE_DEFSIZ to save adapted mesh at the end of
    * anatet wave */
@@ -851,18 +866,20 @@ int MMG2D_mmg2d1n(MMG5_pMesh mesh,MMG5_pSol met) {
            " (MMG_SAVE_DEFSIZ env variable is exported).\n");
     return 1;
   }
-
+  
   MMG5_gradation_info(mesh);
+  
   if ( mesh->info.hgrad > 0. ) {
     if (!MMG2D_gradsiz(mesh,met) ) {
       fprintf(stderr,"  ## Gradation problem. Exit program.\n");
       return 0;
     }
   }
-
+  
   if ( mesh->info.hgradreq > 0. ) {
     MMG2D_gradsizreq(mesh,met);
   }
+  
   /* Debug: export variable MMG_SAVE_GRADSIZ to save adapted mesh at the end of
    * anatet wave */
   if ( getenv("MMG_SAVE_GRADSIZ") ) {
@@ -870,25 +887,26 @@ int MMG2D_mmg2d1n(MMG5_pMesh mesh,MMG5_pSol met) {
            " (MMG_SAVE_GRADSIZ env variable is exported).\n");
     return 1;
   }
-
+  
   if ( !MMG2D_anatri(mesh,met,2) ) {
     fprintf(stderr,"  ## Unable to proceed adaptation. Exit program.\n");
     return 0;
   }
   /* Debug: export variable MMG_SAVE_ANATRI1 to save adapted mesh at the end of
    * anatri wave */
+  
   if ( getenv("MMG_SAVE_ANATRI1") ) {
     printf("  ## WARNING: EXIT AFTER ANATRI-2."
            " (MMG_SAVE_ANATRI2 env variable is exported).\n");
     return 1;
   }
-
+  
 
   /* Stage 3: fine mesh improvements */
   if ( !MMG2D_adptri(mesh,met) ) {
     fprintf(stderr,"  ## Unable to make fine improvements. Exit program.\n");
     return 0;
   }
-
+  
   return 1;
 }

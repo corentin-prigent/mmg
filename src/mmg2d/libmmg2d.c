@@ -61,6 +61,7 @@ void MMG2D_Set_commonFunc(void) {
 }
 
 int MMG2D_mmg2dlib(MMG5_pMesh mesh,MMG5_pSol met) {
+  printf("cc2\n");
   MMG5_pSol sol=NULL; // unused
   mytime    ctim[TIMEMAX];
   char      stim[32];
@@ -85,6 +86,8 @@ int MMG2D_mmg2dlib(MMG5_pMesh mesh,MMG5_pSol met) {
 
   tminit(ctim,TIMEMAX);
   chrono(ON,&(ctim[0]));
+  printf("cc3\n");
+  printf("DEBUG met np: %d\n", met->np);
 
   /* Check options */
   if ( !mesh->nt ) {
@@ -106,7 +109,7 @@ int MMG2D_mmg2dlib(MMG5_pMesh mesh,MMG5_pSol met) {
             " RIGIDBODY.\n");
     _LIBMMG5_RETURN(mesh,met,sol,MMG5_STRONGFAILURE);
   }
-
+  printf("cc4\n");
   if ( mesh->info.imprim > 0 ) fprintf(stdout,"\n  -- MMG2DLIB: INPUT DATA\n");
 
   /* Check input */
@@ -145,13 +148,14 @@ int MMG2D_mmg2dlib(MMG5_pMesh mesh,MMG5_pSol met) {
   chrono(OFF,&(ctim[1]));
   printim(ctim[1].gdif,stim);
 
-  if ( mesh->info.imprim > 0 )
+  if ( mesh->info.imprim > 0 ) 
     fprintf(stdout,"  --  INPUT DATA COMPLETED.     %s\n",stim);
 
   /* Set function pointers */
   MMG2D_setfunc(mesh,met);
   MMG2D_Set_commonFunc();
 
+  /* Si la verbosité est élevée (>5) ou le mode debug activé, affiche les limites de mémoire (points/triangles) */
   if ( abs(mesh->info.imprim) > 5 || mesh->info.ddebug ) {
     fprintf(stdout,"  MAXIMUM NUMBER OF POINTS    (NPMAX) : %8" MMG5_PRId "\n",mesh->npmax);
     fprintf(stdout,"  MAXIMUM NUMBER OF TRIANGLES (NTMAX) : %8" MMG5_PRId "\n",mesh->ntmax);
@@ -163,7 +167,7 @@ int MMG2D_mmg2dlib(MMG5_pMesh mesh,MMG5_pSol met) {
 
   /* Keep only one domain if asked */
   MMG2D_keep_only1Subdomain ( mesh, mesh->info.nsd );
-
+  
   /* reset fem value to user setting (needed for multiple library call) */
   mesh->info.fem = mesh->info.setfem;
 
@@ -188,7 +192,7 @@ int MMG2D_mmg2dlib(MMG5_pMesh mesh,MMG5_pSol met) {
       _LIBMMG5_RETURN(mesh,met,sol,MMG5_STRONGFAILURE);
     }
   }
-
+  
   /* Print initial quality history */
   if ( mesh->info.imprim > 0  ||  mesh->info.imprim < -1 ) {
     if ( !MMG2D_outqua(mesh,met) ) {
@@ -206,7 +210,7 @@ int MMG2D_mmg2dlib(MMG5_pMesh mesh,MMG5_pSol met) {
   if ( mesh->info.ddebug && !MMG5_chkmsh(mesh,1,0) )  _LIBMMG5_RETURN(mesh,met,sol,MMG5_STRONGFAILURE);
 
   if ( mesh->info.imprim > 1 && met->m && met->np ) MMG2D_prilen(mesh,met);
-
+  
   chrono(OFF,&(ctim[2]));
   printim(ctim[2].gdif,stim);
   if ( mesh->info.imprim > 0 )
@@ -217,8 +221,10 @@ int MMG2D_mmg2dlib(MMG5_pMesh mesh,MMG5_pSol met) {
 
   if ( mesh->info.imprim > 0 )
     fprintf(stdout,"\n  -- PHASE 2 : %s MESHING\n",met->size < 3 ? "ISOTROPIC" : "ANISOTROPIC");
-
+  
   /* Mesh improvement */
+  //ICI ON COMMENCE A AFFECTER LA VALEUR DE met->m
+  
   if ( !MMG2D_mmg2d1n(mesh,met) ) {
     if ( !MMG5_unscaleMesh(mesh,met,NULL) )  _LIBMMG5_RETURN(mesh,met,sol,MMG5_STRONGFAILURE);
     MMG2D_RETURN_AND_PACK(mesh,met,sol,MMG5_LOWFAILURE);
@@ -243,9 +249,12 @@ int MMG2D_mmg2dlib(MMG5_pMesh mesh,MMG5_pSol met) {
 
   chrono(ON,&(ctim[1]));
   if ( mesh->info.imprim > 0 )  fprintf(stdout,"\n  -- MESH PACKED UP\n");
-
+  printf("\n[TRACKING] AVANT unscaleMesh, met->m[1] = %f\n", met->m[1]);
   /* Unscale mesh */
   if ( !MMG5_unscaleMesh(mesh,met,NULL) )  _LIBMMG5_RETURN(mesh,met,sol,MMG5_STRONGFAILURE);
+  
+  printf("[TRACKING] APRES unscaleMesh, met->m[1] = %f\n\n", met->m[1]);
+
   if (!MMG2D_pack(mesh,met,sol) ) _LIBMMG5_RETURN(mesh,met,sol,MMG5_LOWFAILURE);
 
   chrono(OFF,&(ctim[1]));
@@ -813,6 +822,7 @@ int MMG2D_mmg2dls(MMG5_pMesh mesh,MMG5_pSol sol,MMG5_pSol umet) {
     MMG5_DEL_MEM(mesh,met->m);
     MMG5_SAFE_FREE (met);
   }
+
   _LIBMMG5_RETURN(mesh,sol,met,MMG5_SUCCESS);
 
 }
@@ -1018,6 +1028,7 @@ int MMG2D_mmg2dmov(MMG5_pMesh mesh,MMG5_pSol met,MMG5_pSol disp) {
     fprintf(stdout,"\n   MMG2DMOV: ELAPSED TIME  %s\n",stim);
     fprintf(stdout,"\n  %s\n   END OF MODULE MMG2D\n  %s\n\n",MG_STR,MG_STR);
   }
+
 
   _LIBMMG5_RETURN(mesh,met,disp,MMG5_SUCCESS);
 }

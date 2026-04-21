@@ -1308,6 +1308,7 @@ int MMG3D_intextmet(MMG5_pMesh mesh,MMG5_pSol met,int np,double me[6]) {
  *    plane, but it is forced to be aligned to the normal direction.
  */
 int MMG3D_defsiz_ani(MMG5_pMesh mesh,MMG5_pSol met) {
+  printf("[DEBUG] MMG3D_defsiz_ani anisosiz_3d.c  \n");
   MMG5_pTetra   pt;
   MMG5_pxTetra  pxt;
   MMG5_pPoint   ppt;
@@ -2071,6 +2072,7 @@ int MMG5_grad2metVolreq(MMG5_pMesh mesh,MMG5_pSol met,MMG5_pTetra pt,MMG5_int np
  *
  */
 int MMG3D_gradsiz_ani(MMG5_pMesh mesh,MMG5_pSol met) {
+  printf("[DEBUG] MMG3D_gradsiz_ani \n");
   MMG5_Hash     edgeTable;
   MMG5_hedge    *pht;
   MMG5_pTetra   pt;

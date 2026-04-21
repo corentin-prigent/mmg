@@ -1511,7 +1511,6 @@ int MMG5_loadMshMesh_part2(MMG5_pMesh mesh,MMG5_pSol *sol,FILE **inm,
 
   return 1;
 }
-
 /**
  * \param mesh pointer to the mesh structure
  * \param sol pointer to the sol structure.
@@ -2389,6 +2388,7 @@ void MMG5_writeDoubleSol3D(MMG5_pMesh mesh,MMG5_pSol sol,FILE *inm,int bin,
 int MMG5_saveSolHeader( MMG5_pMesh mesh,const char *filename,
                         FILE **inm,int ver,int *bin,MMG5_int *bpos,MMG5_int np,int dim,
                         int nsols,int *entities,int *type,int *size) {
+  printf("cc6\n");
   MMG5_pPoint ppt;
   int         binch;
   MMG5_int    k;
@@ -2661,7 +2661,6 @@ int MMG5_saveSolAtTetrahedraHeader( MMG5_pMesh mesh,
  *
  */
 int MMG5_chkMetricType(MMG5_pMesh mesh,int *type, int *entities, FILE *inm) {
-
   /* Metric can be provided only on vertices */
   if ( (*entities != MMG5_Vertex) && (*entities != MMG5_Noentity) ) {
     fprintf(stderr,"  ## Error: %s: Metric should apply on vertices.\n"

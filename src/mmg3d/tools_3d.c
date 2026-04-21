@@ -670,7 +670,7 @@ inline int MMG5_BezierNom(MMG5_pMesh mesh,MMG5_int ip0,MMG5_int ip1,double s,dou
         to[1] *= dd;
         to[2] *= dd;
     }
-
+    //printf("[DEBUG] Nouvelles coordonnées (Bezier) : X=%f, Y=%f, Z=%f\n", o[0], o[1], o[2]);
     return 1;
 }
 

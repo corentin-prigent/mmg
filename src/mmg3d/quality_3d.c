@@ -48,6 +48,7 @@ extern int8_t ddb;
  *
  */
 int MMG3D_tetraQual(MMG5_pMesh mesh, MMG5_pSol met,int8_t metRidTyp) {
+  printf("[DEBUG] MMG3D_tetraQual dans quality.c\n");
   MMG5_pTetra pt;
   double      minqual;
   MMG5_int    k,iel;
@@ -58,6 +59,7 @@ int MMG3D_tetraQual(MMG5_pMesh mesh, MMG5_pSol met,int8_t metRidTyp) {
   iel = 1;
   for (k=1; k<=mesh->ne; k++) {
     pt = &mesh->tetra[k];
+  //  printf("Tétra %d : Sommets [%d, %d, %d, %d]\n",(int)k, pt->v[0], pt->v[1], pt->v[2], pt->v[3]);
     if( !MG_EOK(pt) )   continue;
 
     if ( !metRidTyp && met->size == 6 && met->m ) {
@@ -91,6 +93,7 @@ int MMG3D_tetraQual(MMG5_pMesh mesh, MMG5_pSol met,int8_t metRidTyp) {
 
   /* Here the quality is not normalized by alpha, thus we need to
    * normalized it */
+  printf("[DEBUG] Fin de MMG3D_tetraQual\n");
   return  MMG5_minQualCheck(iel,minqual,MMG3D_ALPHAD);
 }
 
@@ -107,6 +110,7 @@ int MMG3D_tetraQual(MMG5_pMesh mesh, MMG5_pSol met,int8_t metRidTyp) {
  * \todo test with the square of this measure
  */
 inline double MMG5_caltet33_ani(MMG5_pMesh mesh,MMG5_pSol met,MMG5_pTetra pt) {
+  //printf("[DEBUG] quality_3d.c, MMG5_caltet33_ani\n");
   double       cal,abx,aby,abz,acx,acy,acz,adx,ady,adz;
   double       bcx,bcy,bcz,bdx,bdy,bdz,cdx,cdy,cdz;
   double       h1,h2,h3,h4,h5,h6,det,vol,rap,v1,v2,v3,num;

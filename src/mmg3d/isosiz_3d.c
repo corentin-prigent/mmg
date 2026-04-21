@@ -562,6 +562,7 @@ int MMG3D_sum_reqEdgeLengthsAtPoint(MMG5_pMesh mesh,MMG5_pSol met,MMG5_Hash *has
  *
  */
 int MMG3D_set_metricAtPointsOnReqEdges ( MMG5_pMesh mesh,MMG5_pSol met,int8_t ismet) {
+  printf("[DEBUG] Calcul de la métrique par moyenne des longueurs des arêtes requises (Points marqués flag 3)\n");
   MMG5_pTetra  pt;
   MMG5_pxTetra pxt;
   MMG5_Hash    hash;
@@ -660,6 +661,7 @@ int MMG3D_set_metricAtPointsOnReqEdges ( MMG5_pMesh mesh,MMG5_pSol met,int8_t is
  *
  */
 int MMG3D_defsiz_iso(MMG5_pMesh mesh,MMG5_pSol met) {
+    printf("[DEBUG] MMG3D_defsiz_iso isosiz_3d.c  \n");
   MMG5_pTetra    pt,ptloc;
   MMG5_pPrism    pp;
   MMG5_pxTetra   pxt;
@@ -869,7 +871,19 @@ int MMG3D_defsiz_iso(MMG5_pMesh mesh,MMG5_pSol met) {
         p0->flag    = 1;
       }
     }
-
+    ////////////////////////////////////////////////////////////////////////////
+    printf("[DEBUG] Nombre total de métriques (met->np) : %" PRId64 "\n", (int64_t)met->np);
+    printf("[DEBUG] Par la formule: MG_MIN(hmax,MG_MAX(hmin,met->m[ip0]");
+    int count = 0;
+    printf("\n[DEBUG] Aperçu de 10 points internes traités :\n");
+    for (k=1; k<=mesh->np; k++) {
+      if ( mesh->point[k].flag == 1 ) {
+        printf("[DEBUG] Point %d | Ref: %d | Bornes: [%.8f, %.8f] | Nouvelle Taille: %.8f\n",
+          (int)k, mesh->point[k].ref, hmin, hmax, met->m[k]); 
+        if ( ++count >= 3 ) break;
+      }
+    }
+    ///////////////////////////////////////////////////////////////////////////////////
     /** Set size at points that cannot be reached from the tetra */
     for (k=1; k<=mesh->nprism; k++) {
       pp = &mesh->prism[k];
@@ -1081,6 +1095,7 @@ void MMG3D_mark_pointsOnReqEdge_fromTetra (  MMG5_pMesh mesh ) {
  *
  */
 int MMG3D_gradsiz_iso(MMG5_pMesh mesh,MMG5_pSol met) {
+  printf("[DEBUG] MMG3D_gradsiz_iso \n");
   MMG5_pTetra    pt;
   MMG5_pPoint    p0,p1;
   double         l,hn,ux,uy,uz;

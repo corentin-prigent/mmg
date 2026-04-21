@@ -1347,6 +1347,7 @@ int MMG3D_saveMesh(MMG5_pMesh mesh, const char *filename) {
     ppt = &mesh->point[k];
     if ( MG_VOK(ppt) ) {
       if(!bin) {
+          //  printf("[FICHIER] tmp=%d  x=%.6f  y=%.6f  z=%.6f  ref=%d\n",(int)ppt->tmp,ppt->c[0], ppt->c[1], ppt->c[2],(int)MMG5_abs(ppt->ref));
         fprintf(inm,"%.15lg %.15lg %.15lg %" MMG5_PRId "\n",
                 ppt->c[0],ppt->c[1],ppt->c[2],MMG5_abs(ppt->ref));
       } else {
@@ -2141,6 +2142,7 @@ int MMG3D_saveMshMesh_and_allData(MMG5_pMesh mesh,MMG5_pSol *sol,const char *fil
 }
 
 int MMG3D_loadSol(MMG5_pMesh mesh,MMG5_pSol met, const char *filename) {
+  printf("[DEBUG] MMG3D_loadSol dans inout_3d.c\n");
   FILE       *inm;
   long       posnp;
   int        iswp,ier,ver,bin,*type,nsols,dim;
@@ -2164,6 +2166,7 @@ int MMG3D_loadSol(MMG5_pMesh mesh,MMG5_pSol met, const char *filename) {
             "THE SOLUTION (%" MMG5_PRId ") \n",mesh->np,np);
     fclose(inm);
     MMG5_SAFE_FREE(type);
+    printf("[DEBUG] Fin de MMG3D_loadSol dans inout_3d.c\n");
     return -1;
   }
 
@@ -2171,7 +2174,6 @@ int MMG3D_loadSol(MMG5_pMesh mesh,MMG5_pSol met, const char *filename) {
       have to check the entites on which the metric applies */
   int entities = MMG5_Vertex;
   ier = MMG5_chkMetricType(mesh,type,&entities,inm);
-
   if ( ier < 1 ) {
     MMG5_SAFE_FREE(type);
     return ier;

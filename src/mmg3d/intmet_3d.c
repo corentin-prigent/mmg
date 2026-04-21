@@ -273,6 +273,7 @@ int MMG5_intregmet(MMG5_pMesh mesh,MMG5_pSol met,MMG5_int k,int8_t i,double s,
  */
 static inline int
 MMG5_intregvolmet(double *ma,double *mb,double *mp,double t) {
+  //printf("[DEBUG] intregvolmet \n");
   double        dma[6],dmb[6],mai[6],mbi[6],mi[6];
   int           i;
   static int8_t mmgWarn=0;

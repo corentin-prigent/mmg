@@ -590,6 +590,7 @@ static int anaelt(MMG5_pMesh mesh,MMG5_pSol met,int8_t typchk) {
   static double uv[3][2] = { {0.5,0.5}, {0.,0.5}, {0.5,0.} };
   static int8_t mmgWarn0=0,mmgWarn1=0,mmgWarn2=0,mmgWarn3=0;
 
+  printf("[DEBUG] ici\n");
   if ( !MMG5_hashNew(mesh,&hash,mesh->np,3*mesh->np) ) return -1;
   ns = 0;
   s  = 0.5;
@@ -1270,6 +1271,7 @@ static MMG5_int adpcol(MMG5_pMesh mesh,MMG5_pSol met) {
 
 /* analyze triangles and split or collapse to match gradation */
 static int adptri(MMG5_pMesh mesh,MMG5_pSol met,MMG5_int* permNodGlob) {
+  //printf("test\n");
   int         it,maxit;
   int64_t     nnc,nns,nnf,nnm;
   MMG5_int    nc,ns,nf,nm;

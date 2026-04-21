@@ -833,6 +833,7 @@ int MMGS_defsiz_ani(MMG5_pMesh mesh,MMG5_pSol met) {
  *
  */
 int MMGS_gradsiz_ani(MMG5_pMesh mesh,MMG5_pSol met) {
+  //printf("G\n");
   MMG5_pPoint  p1;
   double       *m,mv;
   MMG5_int     k;

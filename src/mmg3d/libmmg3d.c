@@ -909,6 +909,7 @@ int MMG3D_packMesh(MMG5_pMesh mesh,MMG5_pSol sol,MMG5_pSol met) {
   MMG3D_keep_only1Subdomain ( mesh, mesh->info.nsd );
 
   /* compact vertices */
+  
   if ( !mesh->point ) {
     fprintf(stderr, "\n  ## Error: %s: points array not allocated.\n",
             __func__);
@@ -973,6 +974,7 @@ int MMG3D_packMesh(MMG5_pMesh mesh,MMG5_pSol sol,MMG5_pSol met) {
 }
 
 int MMG3D_mmg3dlib(MMG5_pMesh mesh,MMG5_pSol met) {
+  printf("[DEBUG] MMG3D_mmg3dlib dans libmmg3d.c\n");
   MMG5_pSol sol=NULL; // unused
   mytime    ctim[TIMEMAX];
   char      stim[32];
@@ -1038,6 +1040,7 @@ int MMG3D_mmg3dlib(MMG5_pMesh mesh,MMG5_pSol met) {
   }
 
   /* specific meshing */
+  printf("[DEBUG] libmmg3d.c met->np = %d\n",met->np);
   if ( met->np ) {
     if ( mesh->info.optim ) {
       printf("\n  ## ERROR: MISMATCH OPTIONS: OPTIM OPTION CAN NOT BE USED"
@@ -1185,6 +1188,8 @@ int MMG3D_mmg3dlib(MMG5_pMesh mesh,MMG5_pSol met) {
     fprintf(stdout,"\n   MMG3DLIB: ELAPSED TIME  %s\n",stim);
     fprintf(stdout,"\n  %s\n   END OF MODULE MMG3D\n  %s\n\n",MG_STR,MG_STR);
   }
+
+  printf("[DEBUG] fin de MMG3D_mmg3dlib\n");
   _LIBMMG5_RETURN(mesh,met,sol,MMG5_SUCCESS);
 }
 
@@ -1460,7 +1465,6 @@ int MMG3D_mmg3dls(MMG5_pMesh mesh,MMG5_pSol sol,MMG5_pSol umet) {
     _LIBMMG5_RETURN(mesh,met,sol,MMG5_STRONGFAILURE);
   }
   chrono(OFF,&(ctim[1]));
-
   chrono(OFF,&ctim[0]);
   printim(ctim[0].gdif,stim);
   if ( mesh->info.imprim >= 0 ) {

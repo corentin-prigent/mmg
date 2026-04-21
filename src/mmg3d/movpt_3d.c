@@ -37,6 +37,7 @@
 #include "inlined_functions_3d_private.h"
 #include "mmg3dexterns_private.h"
 #include "mmgexterns_private.h"
+#include "anasurf.h"
 
 /**
  * \param mesh pointer to the mesh structure.
@@ -483,6 +484,8 @@ int MMG3D_rotate_surfacicBall(MMG5_pMesh mesh,MMG5_int *lists,int ilists,MMG5_in
 int MMG3D_movbdyregpt_geom(MMG5_pMesh mesh,MMG5_int *lists,const MMG5_int kel,
                            const MMG5_int ip0,double n[3],double lambda[3],double o[3],
                            double no[3]) {
+  //printf("[DEBUG] MMG3D_movbdyregpt_geom dans movpt_3d.c\n");
+  //if ( mesh->info.anasurf ) return 0 ;
   MMG5_pTetra       pt;
   MMG5_pxTetra      pxt;
   MMG5_pPoint       p1,p2,ppt0,p0;
@@ -502,6 +505,22 @@ int MMG3D_movbdyregpt_geom(MMG5_pMesh mesh,MMG5_int *lists,const MMG5_int kel,
 
   assert( 0<=iface && iface<4 && "unexpected local face idx");
   MMG5_tet2tri(mesh,iel,iface,&tt);
+  
+  // /* Chemin analytique : projection sur la sphère */
+  // ///*
+  // if ( mesh->info.anasurf ) {
+  //   int on_sphere = 0;
+
+  //   // Le point ip0 est sur la sphère, OU la face courante porte REF_SPHERE 
+  //   if ( p0->ref == REF_SPHERE ) {
+  //     on_sphere = 1;
+  //   }
+
+  //   if ( on_sphere ) {
+  //     return MMG3D_anasurf_movbdyregpt(mesh, &tt, lambda, ip0, p0, o, no);
+  //   }
+  // }
+  // //*/
 
   if(!MMG5_bezierCP(mesh,&tt,&b,MG_GET(pxt->ori,iface))){
     if( !mmgErr0 ) {
@@ -626,6 +645,7 @@ int MMG3D_movbdyregpt_geom(MMG5_pMesh mesh,MMG5_int *lists,const MMG5_int kel,
 int MMG5_movbdyregpt_iso(MMG5_pMesh mesh, MMG5_pSol met, MMG3D_pPROctree PROctree, int64_t *listv,
                           int ilistv,MMG5_int *lists,int ilists,
                           int improveSurf,int improveVol) {
+  //printf("[DEBUG] MMG5_movbdyregpt_iso\n");
   MMG5_pTetra       pt,pt0;
   MMG5_pPoint       p0;
   MMG5_Tria         tt;
@@ -808,7 +828,7 @@ int MMG5_movbdyregpt_iso(MMG5_pMesh mesh, MMG5_pSol met, MMG3D_pPROctree PROctre
   else if (calnew < 0.3*calold) {
     return 0;
   }
-
+  //if( ip0 == 479) { printf("[MOVBDYREG] Avant: ip0=%d, x=%.10f  y=%.10f  z=%.10f\n",(int)ip0, p0->c[0], p0->c[1], p0->c[2]);}
   /* When all tests have been carried out, update coordinates and normals */
   if ( PROctree )
     MMG3D_movePROctree(mesh, PROctree, ip0, o, p0->c);
@@ -817,6 +837,7 @@ int MMG5_movbdyregpt_iso(MMG5_pMesh mesh, MMG5_pSol met, MMG3D_pPROctree PROctre
   p0->c[1] = o[1];
   p0->c[2] = o[2];
 
+  //if( ip0 == 479) {printf("[MOVBDYREG] Après: ip0=%d déplacé vers x=%.10f  y=%.10f  z=%.10f\n", (int)ip0, p0->c[0], p0->c[1], p0->c[2]);}
   n[0] = no[0];
   n[1] = no[1];
   n[2] = no[2];
@@ -1153,7 +1174,6 @@ int MMG3D_movbdycurvept_newPosForSimu(MMG5_pMesh mesh,MMG5_pPoint p0,MMG5_int ip
                                       double o[3],double no[3],
                                       double no2[3],double to[3],
                                       const uint16_t edgTag) {
-
   MMG5_int ip;
 
   /** Choose direction of displacement depending on edge lengths */

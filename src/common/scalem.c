@@ -44,6 +44,7 @@
  *
  */
 int MMG5_boundingBox(MMG5_pMesh mesh) {
+  printf("[DEBUG] MMG5_boundingBox dans scalem.c\n");
   MMG5_pPoint    ppt;
   MMG5_int       k,i;
   double         dd;
@@ -62,10 +63,13 @@ int MMG5_boundingBox(MMG5_pMesh mesh) {
     }
     ppt->tmp = 0;
   }
+  printf("[DEBUG] scalem.c début calcul delta (dim: %d)\n", mesh->dim);
   mesh->info.delta = 0.0;
   for (i=0; i<mesh->dim; i++) {
+    printf("[DEBUG] Axe %d : Max(%e) - Min(%e) = Taille(%e)\n",i, mesh->info.max[i], mesh->info.min[i], dd);
     dd = mesh->info.max[i] - mesh->info.min[i];
     if ( dd > mesh->info.delta )  mesh->info.delta = dd;
+    printf("[DEBUG]   --> Nouveau delta max trouvé : %e\n", mesh->info.delta);
   }
   if ( mesh->info.delta < MMG5_EPSD ) {
     fprintf(stderr,"\n  ## Error: %s: unable to scale mesh:"
@@ -73,7 +77,7 @@ int MMG5_boundingBox(MMG5_pMesh mesh) {
             "valid elements.\n",__func__);
     return 0;
   }
-
+  printf("[DEBUG] Fin de MMG5_boundingBox\n");
   return 1;
 }
 
@@ -204,6 +208,7 @@ int MMG5_truncate_met3d(MMG5_pSol met, MMG5_int ip, double isqhmin, double isqhm
  *
  */
 int MMG5_scale_scalarMetric(MMG5_pMesh mesh, MMG5_pSol met, double dd) {
+  printf("[DEBUG]la metrique est scalaire donc on lance MMG5_scale_scalarMetric dans scalem.c \n");
   MMG5_int      k;
   int           ier;
   static int8_t mmgWarn0 = 0;
@@ -239,6 +244,26 @@ int MMG5_scale_scalarMetric(MMG5_pMesh mesh, MMG5_pSol met, double dd) {
     met->m[k] *= dd;
   }
 
+  /*                                                                                             */
+  ////////////////////////////////////////////////////////////////////////////////////////////////
+  int nb_affiche = 0;
+  //printf("\n[DEBUG] 3 premières métriques scalaires après mise à l'échelle (dd) :\n");
+  
+  for (k=1; k<=mesh->np; k++) {
+    /* Ignorer les points invalides (supprimés ou non alloués) */
+    if ( !MG_VOK(&mesh->point[k]) ) continue;
+
+    /* Affichage avec %e pour la précision scientifique */
+    printf("  Point %d : %e\n", (int)k, met->m[k]);
+    nb_affiche++;
+
+    /* Arrêt de la boucle après 10 affichages pour ne pas saturer le terminal */
+    if ( nb_affiche >= 3 ) break;
+  }
+  printf("\n");
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  /*                                                                                             */
+
   ier = MMG5_solTruncature_iso(mesh, met);
 
   return ier;
@@ -258,6 +283,7 @@ int MMG5_scale_scalarMetric(MMG5_pMesh mesh, MMG5_pSol met, double dd) {
  *
  */
 int MMG5_scale_tensorMetric(MMG5_pMesh mesh, MMG5_pSol met, double dd) {
+  printf("[DEBUG] donc on lance MMG5_scale_tensorMetric \n");
   MMG5_int    k,iadr;
   int         i,ier;
 
@@ -280,6 +306,32 @@ int MMG5_scale_tensorMetric(MMG5_pMesh mesh, MMG5_pSol met, double dd) {
       met->m[iadr+i] *= dd;
     }
   }
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////
+
+  /* Boucle de vérification finale (placée après la boucle de calcul) */
+  int nb_affiche = 0;
+  printf("\n[DEBUG] État final du champ de métrique :\n");
+
+  for (k=1; k<=mesh->np; k++) {
+
+    /* On limite l'affichage aux 10 premiers points valides pour la lisibilité */
+    if ( nb_affiche < 10 ) {
+      iadr = k*met->size;
+      printf("  Point %d : ", (int)k);
+      
+      for (i=0; i<met->size; i++) {
+        printf("%e  ", met->m[iadr+i]);
+      }
+      printf("\n");
+      nb_affiche++;
+    } else {
+      break;
+    }
+  }
+  printf("[DEBUG] Fin de la vérification.\n\n");
+
+  ///////////////////////////////////////////////////////////////////////////////////////
 
   ier = MMG5_solTruncature_ani(mesh, met);
 
@@ -559,6 +611,7 @@ int MMG5_3dSolTruncature_ani(MMG5_pMesh mesh, MMG5_pSol met) {
  *
  */
 int MMG5_scale_meshAndSol(MMG5_pMesh mesh,MMG5_pSol met,MMG5_pSol sol,double *dd) {
+  printf("[DEBUG] MMG5_scale_meshAndSol dans scalem.c\n");
   MMG5_pPoint    ppt;
   MMG5_pPar      par;
   MMG5_int       k,i;
@@ -580,6 +633,7 @@ int MMG5_scale_meshAndSol(MMG5_pMesh mesh,MMG5_pSol met,MMG5_pSol sol,double *dd
 
   /* normalize coordinates */
   *dd = 1.0 / mesh->info.delta;
+  printf("[DEBUG]dd affecté: %e\n", *dd);
   for (k=1; k<=mesh->np; k++) {
     ppt = &mesh->point[k];
     if ( !MG_VOK(ppt) )  continue;
@@ -630,7 +684,7 @@ int MMG5_scale_meshAndSol(MMG5_pMesh mesh,MMG5_pSol met,MMG5_pSol sol,double *dd
       sol->m[k]   *= (*dd);
     }
   }
-
+  printf("[DEBUG] Fin de MMG5_scale_meshAndSol\n ");
   return 1;
 
 }
@@ -647,8 +701,9 @@ int MMG5_scale_meshAndSol(MMG5_pMesh mesh,MMG5_pSol met,MMG5_pSol sol,double *dd
  *
  */
 int MMG5_scaleMesh(MMG5_pMesh mesh,MMG5_pSol met,MMG5_pSol sol) {
+  printf("[DEBUG ] MMG5_scale.Mesh dans sclaem.c\n");
   double  dd;
-
+  printf("[DEBUG] dd au début: %lf\n ", dd);
   if ( !MMG5_scale_meshAndSol(mesh,met,sol,&dd) ) {
     return 0;
   }
@@ -656,7 +711,8 @@ int MMG5_scaleMesh(MMG5_pMesh mesh,MMG5_pSol met,MMG5_pSol sol) {
   if ( (!met) || (met && !met->np) || (!met->m) ) {
     return 1;
   }
-
+  printf("[DEBUG] met->size = %d\n", met->size);
+  printf("[DEBUG] (mesh->dim-1)*3 = %d\n", (mesh->dim-1)*3);
   if ( met->size == 1 ) {
     /* isotropic metric */
     if ( !MMG5_scale_scalarMetric ( mesh, met, dd ) ) {
@@ -687,6 +743,7 @@ int MMG5_scaleMesh(MMG5_pMesh mesh,MMG5_pSol met,MMG5_pSol sol) {
  *
  */
 int MMG5_unscaleMesh(MMG5_pMesh mesh,MMG5_pSol met,MMG5_pSol sol) {
+  printf("[DEBUG] MMG5_unscaleMesh dans scalem.c\n");
   MMG5_pPoint     ppt;
   double          dd;
   int             i;
@@ -753,6 +810,7 @@ int MMG5_unscaleMesh(MMG5_pMesh mesh,MMG5_pSol met,MMG5_pSol sol) {
   /* unscale sizes */
   switch (met->type) {
   case 1:
+    printf("[DEBUG] MMG5_unscaleMesh case 1\n");
     for (k=1; k<=mesh->np; k++) {
       ppt = &mesh->point[k];
       if ( !MG_VOK(ppt) )  continue;
@@ -760,6 +818,7 @@ int MMG5_unscaleMesh(MMG5_pMesh mesh,MMG5_pSol met,MMG5_pSol sol) {
     }
     break;
   case 3:
+    printf("[DEBUG] MMG5_unscaleMesh case 3\n");
     dd = 1.0 / (dd*dd);
     for (k=1; k<=mesh->np; k++) {
       ppt = &mesh->point[k];
@@ -771,6 +830,26 @@ int MMG5_unscaleMesh(MMG5_pMesh mesh,MMG5_pSol met,MMG5_pSol sol) {
     fprintf(stderr,"\n  ## Error: %s: unexpected metric size (%d)\n",__func__,met->size);
     break;
   }
+  /*                                                                                  
+  ////////////////////////////////////////////////////////////////////////////////////////////
+  //DEBUG : Affichage des 10 premières métriques mises à l'échelle 
+  int nb_affiche = 0;
+  //printf("\n[DEBUG] 3 premières métriques scalaires après mise retournée à l'échelle (dd) :\n");
+  
+  for (k=1; k<=mesh->np; k++) {
+    // Ignorer les points invalides (supprimés ou non alloués) 
+    if ( !MG_VOK(&mesh->point[k]) ) continue;
 
+    // Affichage avec %e pour la précision scientifique
+    printf("  Point %d : %e\n", (int)k, met->m[k]);
+    nb_affiche++;
+
+    //Arrêt de la boucle après 10 affichages pour ne pas saturer le terminal
+    if ( nb_affiche >= 3 ) break;
+  }
+  printf("\n");
+  //////////////////////////////////////////////////////////////////////////////////////////
+                                                                                    */
+  printf("[DEBUG] MMG5_unscaleMesh dans scalem.c\n");
   return 1;
 }

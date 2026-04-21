@@ -1,0 +1,208 @@
+  %% /home/eelleb/Desktop/Tutommg/cercle.mesh OPENED
+RAPPORT EXHAUSTIF — /home/eelleb/Desktop/Tutommg/cercle.mesh
+
+################################################################
+## MMG5_Mesh — champs globaux                                ##
+################################################################
+  Dimension              : 2
+  Version fichier        : 2
+  Type de maillage       : 0
+
+  --- Compteurs actuels ---
+  np   (points)          : 9
+  nt   (triangles)       : 8
+  na   (arêtes)          : 8
+  ne   (tétraèdres)      : 0
+  nquad (quadrangles)    : 0
+  nprism (prismes)       : 0
+  xp   (pts surface)     : 0
+  xt   (tria/tetra surf) : 0
+
+  --- Capacités max allouées ---
+  npmax                  : 50000
+  ntmax                  : 100000
+  namax                  : 8
+  nemax                  : 0
+  xpmax                  : 0
+  xtmax                  : 0
+
+  --- Indices premiers éléments libres ---
+  npnil (1er point libre): 10
+  nenil (1er elem libre) : 9
+  nanil (1er arête libre): 0
+
+  --- Mémoire ---
+  memCur                 : 10400376 octets (10156 Ko)
+  memMax                 : 16653402112 octets (15881 Mo)
+  gap (realloc)          : 0.2000
+
+  --- Fichiers ---
+  namein                 : mesh.mesh
+  nameout                : mesh.o.mesh
+
+  --- Drapeaux internes ---
+  base                   : 0
+  mark                   : 0
+  nsols                  : 0
+  nc1                    : 0
+
+################################################################
+## MMG5_Info — paramètres du job                            ##
+################################################################
+  --- Tailles d'arêtes ---
+  hmin                   : -1
+  hmax                   : -1
+  hsiz (taille uniforme) : -1
+  hgrad  (gradation)     : 0.262364
+  hgradreq               : 0.832909
+  hausd (Hausdorff)      : 0.01
+  dhd   (dièdre max)     : 0.707107
+
+  --- Boîte englobante ---
+  min : [0.000000, 0.000000, 0.000000]
+  max : [0.000000, 0.000000, 0.000000]
+  delta (normalisation)  : 0
+
+  --- Modes ---
+  iso (level-set)        : 0
+  isosurf                : 0
+  isoref                 : 10
+  ls (isovalue)          : 0
+  lag (lagrangien)       : -1
+  setfem                 : 1
+  opnbdy                 : 0
+
+  --- Opérations autorisées ---
+  noinsert               : 0
+  noswap                 : 0
+  nomove                 : 0
+  nosurf                 : 0
+  nosizreq               : 0
+
+  --- Optimisation ---
+  optim                  : 0
+  optimLES               : 0
+  ani (anisotrope)       : 0
+  metRidTyp              : 0
+
+  --- Divers ---
+  imprim (verbosité)     : 1
+  ddebug                 : 0
+  nreg (regul. normales) : 0
+  xreg (regul. sommets)  : 0
+  renum (scotch)         : 0
+  mem (limite mémoire)   : -1 Mo
+  npar / npari           : 0 / 0
+  nmat / nmati           : 0 / 0
+  nsd (sous-domaine)     : 0
+  sethmin / sethmax      : 0 / 0
+  badkal                 : 0
+  fparam                 : (non défini)
+  (aucun paramètre local)
+
+################################################################
+## STATISTIQUES GLOBALES                                       ##
+################################################################
+  Qualité triangles :
+    min    = 0.000000
+    max    = 0.000000
+    moyenne= 0.000000
+    dégénérés (q<0.01) : 8 / 8
+
+  Bounding box réelle :
+    x : [-1.0000000, 1.0000000]  (largeur = 2.0000000)
+    y : [-1.0000000, 1.0000000]  (hauteur = 2.0000000)
+
+  Références points  : 1 1 1 1 1 1 1 1 1 
+  Références triangles : 1 1 1 1 1 1 1 1 
+
+################################################################
+## MMG5_Point — sommets                                      ##
+################################################################
+  Nombre de points : 9
+
+  idx    x             y              ref    xp      flag   s      tagdel  tag(décodé)       
+  ---    ---           ---            ---    ---     -----  ---    ------  ----------          
+  1      1.0000000     0.0000000      1      0       0      0      0      (aucun)
+  2      0.7070000     0.7070000      1      0       0      0      0      (aucun)
+  3      0.0000000     1.0000000      1      0       0      0      0      (aucun)
+  4      -0.7070000    0.7070000      1      0       0      0      0      (aucun)
+  5      -1.0000000    0.0000000      1      0       0      0      0      (aucun)
+  6      -0.7070000    -0.7070000     1      0       0      0      0      (aucun)
+  7      0.0000000     -1.0000000     1      0       0      0      0      (aucun)
+  8      0.7070000     -0.7070000     1      0       0      0      0      (aucun)
+  9      0.0000000     0.0000000      1      0       0      0      0      (aucun)
+
+--- MMG5_Point — normales/tangentes (si non nulles) ---
+  (toutes nulles — normal en 2D)
+
+################################################################
+## MMG5_xPoint — points de surface                           ##
+################################################################
+  Nombre de xpoints : 0
+
+  (aucun xpoint)
+
+################################################################
+## MMG5_Tria — triangles                                     ##
+################################################################
+  Nombre de triangles : 8
+
+  idx    v0    v1    v2     ref   qual        base   flag   edg0  edg1  edg2   tag[0]  tag[1]  tag[2]
+  1      1     2     9      1     0.000000    0      0      0     0     0      [(aucun)] [(aucun)] [(aucun)]
+  2      2     3     9      1     0.000000    0      0      0     0     0      [(aucun)] [(aucun)] [(aucun)]
+  3      3     4     9      1     0.000000    0      0      0     0     0      [(aucun)] [(aucun)] [(aucun)]
+  4      4     5     9      1     0.000000    0      0      0     0     0      [(aucun)] [(aucun)] [(aucun)]
+  5      5     6     9      1     0.000000    0      0      0     0     0      [(aucun)] [(aucun)] [(aucun)]
+  6      6     7     9      1     0.000000    0      0      0     0     0      [(aucun)] [(aucun)] [(aucun)]
+  7      7     8     9      1     0.000000    0      0      0     0     0      [(aucun)] [(aucun)] [(aucun)]
+  8      8     1     9      1     0.000000    0      0      0     0     0      [(aucun)] [(aucun)] [(aucun)]
+
+################################################################
+## MMG5_Edge — arêtes                                       ##
+################################################################
+  Nombre d'arêtes : 8
+
+  idx    a      b       ref    base   tag(décodé)       
+  ---    ---    ---     ---    ----   ----------          
+  1      1      2       1      0      BDY REQ 
+  2      2      3       1      0      BDY REQ 
+  3      3      4       1      0      BDY REQ 
+  4      4      5       1      0      BDY REQ 
+  5      5      6       1      0      BDY REQ 
+  6      6      7       1      0      BDY REQ 
+  7      7      8       1      0      BDY REQ 
+  8      8      1       1      0      BDY REQ 
+
+################################################################
+## MMG5_HGeom — hash table arêtes géométriques            ##
+################################################################
+  siz (taille utilisée) : 0
+  max (capacité)        : 0
+  nxt (prochain libre)  : 0
+  (table vide)
+
+################################################################
+## Tables d'adjacence                                          ##
+################################################################
+  adjt : non disponible (pas encore calculé)
+
+  adja (tétraèdres) : présent
+  adjq (quadrangles): NULL
+
+################################################################
+## MMG5_Sol — métrique                                      ##
+################################################################
+  np       : 0
+  npmax    : 0
+  npi      : 0
+  dim      : 2
+  ver      : 2
+  size     : 1  (valeurs par entité)
+  type     : 1 (Scalar)
+  entities : 0
+  umin     : 0
+  umax     : 0
+  namein   : mesh.sol
+  nameout  : mesh.o.sol
+  (pas de valeurs — métrique non initialisée)

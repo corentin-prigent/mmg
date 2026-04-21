@@ -34,10 +34,11 @@
  */
 
 #include "libmmg3d_private.h"
+#include "anasurf.h"
 
 /** get new point address */
 MMG5_int MMG3D_newPt(MMG5_pMesh mesh,double c[3],uint16_t tag,MMG5_int src) {
-
+  //printf("hey\n");
   MMG5_pPoint  ppt;
   MMG5_int     curpt;
 
@@ -74,6 +75,13 @@ MMG5_int MMG3D_newPt(MMG5_pMesh mesh,double c[3],uint16_t tag,MMG5_int src) {
   assert( src );
   ppt->src = src;
 #endif
+  
+  /* En mode anasurf, forcer ref=7 si le point est sur la sphère */
+  if ( mesh->info.anasurf ) {
+    if ( MMG3D_anasurf_isOnSphere(c) ) {
+      ppt->ref = REF_SPHERE;
+    }
+  }
   return curpt;
 }
 

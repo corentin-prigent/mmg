@@ -36,6 +36,7 @@
 #include "libmmg3d.h"
 #include "libmmg3d_private.h"
 #include "mmg3dexterns_private.h"
+#include "anasurf.h"
 
 #ifndef MMG_PATTERN
 
@@ -84,6 +85,7 @@ int MMG3D_mmg3d1_delone_split(MMG5_pMesh mesh, MMG5_pSol met,
                               int8_t imax,double lmax,double lmaxtet,
                               int8_t chkRidTet,MMG5_int *ifilt,MMG5_int *ns,
                               int *warn,int8_t *countMemFailure ) {
+  //printf("[DEBUG] MMG3D_mmg3d1_delone_split dans mmg3d1_delone.c\n");
   MMG5_pTetra   pt;
   MMG5_pxTetra  pxt;
   MMG5_pPoint   p0,p1;
@@ -164,7 +166,7 @@ int MMG3D_mmg3d1_delone_split(MMG5_pMesh mesh, MMG5_pSol met,
      * point here. */
     ppt = &mesh->point[ip];
     MMG3D_set_geom(mesh,ppt,tag,ref,pxt->ref[i],no1,no2,to);
-
+    //printf("ici\n");
     ier = MMG3D_simbulgept(mesh,met,list,ilist,ip);
 
     if ( ier == 2 || ier < 0 ) {
@@ -249,7 +251,7 @@ int MMG3D_mmg3d1_delone_split(MMG5_pMesh mesh, MMG5_pSol met,
                           return 1,
                           o,MG_NOTAG,src);
     }
-
+    
     int ier = 1;
     if ( met && met->m ) {
       ier = MMG5_intmet(mesh,met,k,imax,ip,0.5);
@@ -363,6 +365,7 @@ int MMG3D_mmg3d1_delone_splcol(MMG5_pMesh mesh, MMG5_pSol met,
                                int8_t chkRidTet,MMG5_int *ifilt,
                                MMG5_int *ns,MMG5_int *nc,
                                int *warn ) {
+  //printf("[DEBUG] MMG3D_mmg3d1_delone_splcol dans mmg3d1_delone.c\n");
 
   int ier;
   int8_t countMemFailure = 0;
@@ -564,6 +567,7 @@ int MMG5_adpsplcol(MMG5_pMesh mesh, MMG5_pSol met,MMG3D_pPROctree *PROctree,
  */
 static
 int MMG5_optbad(MMG5_pMesh mesh, MMG5_pSol met,MMG3D_pPROctree PROctree) {
+  printf("[DEBUG] MMG5_optbad dans mmg3d1_delone\n");
   int           it,maxit;
   MMG5_int      nf,nnf,nnm,nm,nw;
   double        crit;
@@ -623,6 +627,7 @@ int MMG5_optbad(MMG5_pMesh mesh, MMG5_pSol met,MMG3D_pPROctree PROctree) {
               "        "
               "      %8" MMG5_PRId " swapped, %8" MMG5_PRId " moved, %d iter. \n",nnf,nnm,it);
   }
+  printf("[DEBUG] Fin de MMG5_optbad\n");
   return 1;
 }
 
@@ -640,6 +645,7 @@ int MMG5_optbad(MMG5_pMesh mesh, MMG5_pSol met,MMG3D_pPROctree PROctree) {
  */
 static
 int MMG5_adpdel(MMG5_pMesh mesh,MMG5_pSol met,MMG3D_pPROctree *PROctree, int* warn) {
+  printf("[DEBUG] MMG5_adpdel dans mmg3d1_delone.c\n");
   int        ier;
   int        it,maxit,noptim;
   MMG5_int   ns,nc,ne,nnm,nm,nnf,nf,nnc,nns,nfilt,ifilt;
@@ -660,6 +666,9 @@ int MMG5_adpdel(MMG5_pMesh mesh,MMG5_pSol met,MMG3D_pPROctree *PROctree, int* wa
       ifilt = 0;
       ne = mesh->ne;
       ier = MMG5_adpsplcol(mesh,met,PROctree,ne,&ifilt,&ns,&nc,warn);
+      if (ns != 0) {
+      printf("[DEBUG] ns=%d apres MMG5_adpsplcol\n",ns);
+      }
       if ( ier<=0 ) return -1;
     } /* End conditional loop on mesh->info.noinsert */
     else  ns = nc = ifilt = 0;
@@ -739,7 +748,7 @@ int MMG5_adpdel(MMG5_pMesh mesh,MMG5_pSol met,MMG3D_pPROctree *PROctree, int* wa
               " %8" MMG5_PRId " swapped, %8" MMG5_PRId " moved, %d iter.\n",nfilt,nns,nnc,nnf,nnm, it);
     }
   }
-
+   printf("[DEBUG] Fin de MMG5_adpdel\n");
   return 1;
 }
 
@@ -848,6 +857,7 @@ int MMG5_optetLES(MMG5_pMesh mesh, MMG5_pSol met,MMG3D_pPROctree PROctree) {
  */
 static
 int MMG5_optet(MMG5_pMesh mesh, MMG5_pSol met,MMG3D_pPROctree PROctree) {
+  printf("[DEBUG] MMG5_optet dans mmg3d1_delone.c\n");
   MMG5_pTetra   pt;
   int           it,maxit;
   MMG5_int      nnf,nf,nw,k,nnm,nm;
@@ -941,6 +951,7 @@ int MMG5_optet(MMG5_pMesh mesh, MMG5_pSol met,MMG3D_pPROctree PROctree) {
               "        "
               "      %8" MMG5_PRId " swapped, %8" MMG5_PRId " moved, %d iter. \n",nnf,nnm,it);
   }
+  printf("[DEBUG] Fin de MMG5_optet\n");
   return 1;
 }
 
@@ -958,10 +969,12 @@ int MMG5_optet(MMG5_pMesh mesh, MMG5_pSol met,MMG3D_pPROctree PROctree) {
 static
 int MMG5_adptet_delone(MMG5_pMesh mesh,MMG5_pSol met,MMG3D_pPROctree *PROctree,
                        MMG5_int * permNodGlob) {
+  printf("[DEBUG] MMG5_adptet_delone dans mmg3d1_delone.c\n");
   MMG5_int  nnf,nf;
   int       warn,ns;
-
+                    
   /** Step 1: few iters of swaps */
+//  printf("[DEBUG] iciiiiiiiiiiiiiiiiii \n");
   if ( !mesh->info.noswap ) {
     nnf = MMG5_swpmsh(mesh,met,*PROctree,2);
     if ( nnf < 0 ) {
@@ -979,17 +992,13 @@ int MMG5_adptet_delone(MMG5_pMesh mesh,MMG5_pSol met,MMG3D_pPROctree *PROctree,
   } else {
     nnf = nf = 0;
   }
-
   if ( mesh->info.ddebug ) {
     fprintf(stdout," ------------- Delaunay: INITIAL SWAP %7"MMG5_PRId"\n",nnf);
     MMG3D_outqua(mesh,met);
   }
-
   /** Step 2: few iters of splits, collapses, swaps and moves */
   warn = 0;
-
   ns = MMG5_adpdel(mesh,met,PROctree,&warn);
-
   if ( ns < 0 ) {
     fprintf(stderr,"\n  ## Error: %s: unable to complete mesh. Exit program.\n",
       __func__);
@@ -1017,6 +1026,7 @@ int MMG5_adptet_delone(MMG5_pMesh mesh,MMG5_pSol met,MMG3D_pPROctree *PROctree,
   else {
     if(!MMG5_optet(mesh,met,*PROctree)) return 0;
   }
+  printf("[DEBUG] Fin de MMG5_adptet_delone\n");
   return 1;
 }
 
@@ -1030,6 +1040,7 @@ int MMG5_adptet_delone(MMG5_pMesh mesh,MMG5_pSol met,MMG3D_pPROctree *PROctree,
  *
  */
 int MMG5_mmg3d1_delone(MMG5_pMesh mesh,MMG5_pSol met,MMG5_int *permNodGlob) {
+  printf("[DEBUG] MMG5_mmg3d1_delone dans mmg3d1_delone.c\n");
   MMG3D_pPROctree PROctree = NULL;
 
   if ( abs(mesh->info.imprim) > 4 )
@@ -1044,6 +1055,9 @@ int MMG5_mmg3d1_delone(MMG5_pMesh mesh,MMG5_pSol met,MMG5_int *permNodGlob) {
   if ( abs(mesh->info.imprim) > 4 || mesh->info.ddebug )
     fprintf(stdout,"  ** GEOMETRIC MESH\n");
 
+  // if ( mesh->info.anasurf ) {
+  //   MMG3D_anasurf_setSpherenormals(mesh);
+  // }
   if ( !MMG5_anatet(mesh,met,1,0) ) {
     fprintf(stderr,"\n  ## Unable to split mesh. Exiting.\n");
     return 0;
@@ -1079,6 +1093,7 @@ int MMG5_mmg3d1_delone(MMG5_pMesh mesh,MMG5_pSol met,MMG5_int *permNodGlob) {
   MMG5_gradation_info(mesh);
 
   if ( mesh->info.hgrad > 0. ) {
+    //printf("test\n");
     if ( !MMG3D_gradsiz(mesh,met) ) {
       fprintf(stderr,"\n  ## Gradation problem. Exit program.\n");
       return 0;
@@ -1103,6 +1118,7 @@ int MMG5_mmg3d1_delone(MMG5_pMesh mesh,MMG5_pSol met,MMG5_int *permNodGlob) {
     fprintf(stderr,"\n  ## Unable to split mesh. Exiting.\n");
     return 0;
   }
+  printf("On est sorti de MMG5_anatet, on fait d'autre type de split\n");
 
   /* Debug: export variable MMG_SAVE_ANATET2 to save adapted mesh at the end of
    * anatet wave */
@@ -1125,7 +1141,7 @@ int MMG5_mmg3d1_delone(MMG5_pMesh mesh,MMG5_pSol met,MMG5_int *permNodGlob) {
       }
     }
   }
-
+  printf("ici\n");
   if ( !MMG5_adptet_delone(mesh,met,&PROctree,permNodGlob) ) {
     fprintf(stderr,"\n  ## Unable to adapt. Exit program.\n");
     if ( PROctree ) {
@@ -1153,7 +1169,7 @@ int MMG5_mmg3d1_delone(MMG5_pMesh mesh,MMG5_pSol met,MMG5_int *permNodGlob) {
     /*free PROctree*/
     MMG3D_freePROctree(mesh,&PROctree);
   }
-
+  printf("[DEBUG] Fin de MMG5_mmg3d1_delone\n");
   return 1;
 }
 

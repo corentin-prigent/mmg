@@ -86,6 +86,16 @@ double MMG2D_caltri_iso_3pt(double *a,double *b,double *c) {
 
   hm = h1 + h2 + h3;
 
+
+  /* 
+  static int debug_count = 0;
+  if ( debug_count < 600 ) {
+      printf("DEBUG Tri %d: Aire=%f | h1=%f, h2=%f, h3=%f | Qualite=%f\n", 
+             debug_count, area, h1, h2, h3, (hm > 0. ? area/hm : 0.0));
+      debug_count++;
+  }
+  */
+
   if ( hm > 0. ) {
     return  area / hm;
   }
@@ -181,6 +191,7 @@ double MMG2D_caltri_ani(MMG5_pMesh mesh,MMG5_pSol met,MMG5_pTria pt) {
  *
  */
 int MMG2D_outqua(MMG5_pMesh mesh,MMG5_pSol met) {
+  printf("Debug MMG2D_outqua\n");
   MMG5_pTria    pt;
   double        rap,rapmin,rapmax,rapavg,med,good;
   int           i,ir,imax,his[5];

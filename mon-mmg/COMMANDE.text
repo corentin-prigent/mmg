@@ -1,0 +1,30 @@
+cd ~/mon-mmg
+mkdir -p build && cd build
+
+# Configure
+cmake .. -DCMAKE_BUILD_TYPE=Debug
+
+# Compile
+make -j$(nproc)
+
+Recompiler et lancer :
+cd ~/Desktop/mmg/mon-mmg/build
+make -j$(nproc) && ./mon_test
+
+Pas besoin de relancer cmake si on modifie que main.c. car make détecte les changements automatiquement.
+
+3. Si je modifie CMakeLists.txt :
+
+cmake .. -DCMAKE_BUILD_TYPE=Debug
+make -j$(nproc) && ./mon_test
+
+4. Si cmake se comporte bizarrement (cache corrompu) :
+
+rm -rf CMakeCache.txt CMakeFiles/
+cmake .. -DCMAKE_BUILD_TYPE=Debug
+make -j$(nproc) && ./mon_test
+
+
+./mon_test /home/eelleb/Desktop/Tutommg/carre.mesh  >  resultat.txt
+
+grep -rn "int main" src/

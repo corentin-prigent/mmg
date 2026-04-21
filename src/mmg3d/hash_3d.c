@@ -120,6 +120,7 @@ MMG5_int MMG5_hashGetFace(MMG5_Hash *hash,MMG5_int ia,MMG5_int ib,MMG5_int ic) {
  *
  */
 int MMG3D_hashTetra(MMG5_pMesh mesh, int pack) {
+  //printf("[DEBUG] MMG3D_hashTetra, hash_3d.c: Il ya des tetra et on stocke l'adjacense\n");
   MMG5_pTetra    pt,pt1;
   MMG5_int       key;
   MMG5_int       k,kk,pp,l,ll,mins,mins1,maxs,maxs1,sum,sum1,iadr;

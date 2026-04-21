@@ -160,6 +160,7 @@ int MMGS_split1(MMG5_pMesh mesh,MMG5_pSol met,MMG5_int k,int i,MMG5_int *vx) {
  * \remark Don't work for non-manifold edge.
  */
 int MMGS_simbulgept(MMG5_pMesh mesh,MMG5_pSol met, MMG5_int k,int i,MMG5_int ip) {
+  printf("[DEBUG] ici\n");
   MMG5_pTria     pt,pt0;
   MMG5_pPoint    ppt,ppt0;
   double         cal;
@@ -281,6 +282,7 @@ int MMGS_simbulgept(MMG5_pMesh mesh,MMG5_pSol met, MMG5_int k,int i,MMG5_int ip)
  * \remark do not call this function in non-manifold case
  */
 int split1b(MMG5_pMesh mesh,MMG5_int k,int8_t i,MMG5_int ip) {
+  printf("[DEBUG] split1b\n");
   MMG5_pTria     pt,pt1;
   MMG5_pPoint    ppt;
   MMG5_int       *adja,iel,jel,kel,mel;
@@ -457,6 +459,7 @@ int MMG5_split2_sim(MMG5_pMesh mesh,MMG5_pSol met,MMG5_int k,MMG5_int *vx) {
  *
  */
 int MMGS_split2(MMG5_pMesh mesh,MMG5_pSol met,MMG5_int k,MMG5_int *vx) {
+  printf("[DEBUG] MMGS_split2\n");
   MMG5_pTria    pt,pt1,pt2;
   MMG5_pPoint   p3,p4;
   MMG5_int      iel,jel;

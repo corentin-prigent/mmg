@@ -1,0 +1,35 @@
+  %% /home/eelleb/Desktop/Tutommg/carre.mesh OPENED
+
+=== MMG5_Mesh — résumé ===
+  Dimension         : 2
+  Version fichier   : 2
+  np  (points)      : 4
+  nt  (triangles)   : 2
+  na  (arêtes)      : 4
+  nquad (quads)     : 0
+  Mémoire utilisée  : 8 Mo
+  Mémoire max       : 15881 Mo
+  Fichier entrée    : mesh.mesh
+  Fichier sortie    : mesh.o.mesh
+
+=== POINTS (np = 4) ===
+  idx     x            y             ref     tag   
+  ---     -----------  -----------   ---     ---   
+  1       0.000000     0.000000      1       0     
+  2       1.000000     0.000000      1       0     
+  3       1.000000     1.000000      1       0     
+  4       0.000000     1.000000      1       0     
+
+=== TRIANGLES (nt = 2) ===
+  idx     v[0]   v[1]   v[2]    ref     qual        
+  ---     ----   ----   ----    ---     ----        
+  1       1      2      3       1       0.000000    
+  2       1      3      4       1       0.000000    
+
+=== EDGES (na = 4) ===
+  idx     a      b       ref     tag   
+  ---     ---    ---     ---     ---   
+  1       1      2       1       17    
+  2       2      3       1       17    
+  3       3      4       1       17    
+  4       4      1       1       17    

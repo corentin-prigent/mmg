@@ -41,6 +41,7 @@
  * Print MMG release and date
  */
 void MMG5_version(MMG5_pMesh mesh,char *dim) {
+  printf("[DEBUG] MMG5_version dans libtools.c\n");
 
   if ( mesh->info.imprim >= 0 ) {
 #ifndef MMG_COMPARABLE_OUTPUT
@@ -57,7 +58,7 @@ void MMG5_version(MMG5_pMesh mesh,char *dim) {
     fprintf(stdout,"     git date:   %s\n\n",MMG_GIT_DATE);
 #endif
   }
-
+printf("[DEBUG] Fin de MMG5_version\n");
 }
 
 /**

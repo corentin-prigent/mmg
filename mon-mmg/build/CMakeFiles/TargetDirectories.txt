@@ -1,0 +1,4 @@
+/home/eelleb/Desktop/mmg/mon-mmg/build/CMakeFiles/mon_test.dir
+/home/eelleb/Desktop/mmg/mon-mmg/build/CMakeFiles/mon_test2.dir
+/home/eelleb/Desktop/mmg/mon-mmg/build/CMakeFiles/edit_cache.dir
+/home/eelleb/Desktop/mmg/mon-mmg/build/CMakeFiles/rebuild_cache.dir

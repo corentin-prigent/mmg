@@ -1109,6 +1109,8 @@ int MMG2D_saveMesh(MMG5_pMesh mesh,const char *filename) {
   int               bin, binch,gmsh;
   char              *ptr,*data,chaine[MMG5_FILESTR_LGTH];
 
+  printf("default MMG2d_saveMesh\n");
+
   gmsh = (mesh->info.renum==1||mesh->info.renum==2);
 
   mesh->ver = 2;
@@ -1553,6 +1555,8 @@ int MMG2D_saveMshMesh_and_allData(MMG5_pMesh mesh,MMG5_pSol *sol,const char *fil
  */
 static inline
 void MMG2D_writeDoubleSol(MMG5_pSol sol,FILE *inm,int bin,MMG5_int pos,int gmsh) {
+
+  //printf("Debug : MMG2D_writeDoubleSol cc7\n");
   int          i,isol;
 
   isol = pos * sol->size;
@@ -1615,6 +1619,7 @@ void MMG2D_writeDoubleSol(MMG5_pSol sol,FILE *inm,int bin,MMG5_int pos,int gmsh)
  *
  */
 int MMG2D_saveSol(MMG5_pMesh mesh,MMG5_pSol sol,const char *filename) {
+  printf("cc5\n");
   FILE*        inm;
   MMG5_pPoint  ppt;
   MMG5_int     k,bpos;
@@ -1644,11 +1649,15 @@ int MMG2D_saveSol(MMG5_pMesh mesh,MMG5_pSol sol,const char *filename) {
                             1,&sol->entities,&sol->type,&sol->size);
 
   if ( ier < 1 ) return ier;
-
   for (k=1; k<=mesh->np; k++) {
     ppt = &mesh->point[k];
-    if ( !MG_VOK(ppt) )  continue;
 
+    /*
+    if (k <= 10) { // On n'affiche que les 10 premiers pour ne pas polluer
+    
+        printf("    Debug save_sol, Point final n°%d -> Valeur = %f\n", k, sol->m[k]);
+    }
+   */
     MMG2D_writeDoubleSol(sol,inm,bin,k,gmsh);
     fprintf(inm,"\n");
   }
