@@ -34,6 +34,7 @@
 
 #include "libmmg3d_private.h"
 #include "libmmg3d.h"
+#include "anasurf.h"
 
 mytime         MMG5_ctim[TIMEMAX];
 
@@ -294,10 +295,17 @@ int MMG3D_defaultOption(MMG5_pMesh mesh,MMG5_pSol met,MMG5_pSol sol) {
  * Main program for MMG3D executable: perform mesh adaptation.
  *
  */
+//argc est le compteur de mots, *argv[] contient le texte de chaque mot entré
 int main(int argc,char *argv[]) {
 
+  printf("[DEBUG] main() dans mmg3d.c\n");
+
+  // Pointeur vers le maillage géométrique (coordonnées des points, triangles, arêtes)
   MMG5_pMesh      mesh;
-  MMG5_pSol       sol,met,disp,ls;
+  MMG5_pSol       sol,     // Pointeur générique qui pointera vers 'met', 'disp' ou 'ls' selon l'option choisie.
+                  met,     // La Métrique 
+                  disp,    // Le Déplacement : utilisé en mode Lagrangien pour déformer physiquement l'objet
+                  ls;      // La Level-Set
   int             ier,ierSave,fmtin,fmtout;
   char            stim[32],*ptr;
 
@@ -312,7 +320,7 @@ int main(int argc,char *argv[]) {
   fprintf(stdout,"     %s\n",MMG_COPYRIGHT);
   fprintf(stdout,"     %s %s\n",__DATE__,__TIME__);
 #endif
-
+  //On veut renommer une fonction spécifique pour qu'elle réponde à un nom générique
   MMG3D_Set_commonFunc();
 
   /* Print timer at exit */
@@ -326,14 +334,16 @@ int main(int argc,char *argv[]) {
   met  = NULL;
   disp = NULL;
   ls   = NULL;
-
+  
   MMG3D_Init_mesh(MMG5_ARG_start,
                   MMG5_ARG_ppMesh,&mesh,MMG5_ARG_ppMet,&met,
                   MMG5_ARG_ppDisp,&disp,
                   MMG5_ARG_ppLs,&ls,
                   MMG5_ARG_end);
-
+  printf("[DEBUG] On a lors de l'initialisation du maillage affecté a la section met->np = %d\n",met->np);
   /* reset default values for file names */
+
+  //exécute une tâche et retourne 0 ou 1 pour indiquer si l'opération a réussi (0) ou échoué (1).
   if ( !MMG3D_Free_names(MMG5_ARG_start,
                          MMG5_ARG_ppMesh,&mesh,MMG5_ARG_ppMet,&met,
                          MMG5_ARG_ppDisp,&disp,
@@ -348,7 +358,6 @@ int main(int argc,char *argv[]) {
 
   /* Read command line */
   if ( !MMG3D_parsar(argc,argv,mesh,met,ls) )  return MMG5_STRONGFAILURE;
-
   /* load data */
   if ( mesh->info.imprim >= 0 )
     fprintf(stdout,"\n  -- INPUT DATA\n");
@@ -368,6 +377,7 @@ int main(int argc,char *argv[]) {
   /* read mesh/sol files */
   ptr   = MMG5_Get_filenameExt(mesh->namein);
   fmtin = MMG5_Get_format(ptr,MMG5_FMT_MeditASCII);
+  printf("[DEBUG] ftmin = %d\n", fmtin);
 
   switch ( fmtin ) {
 
@@ -385,6 +395,7 @@ int main(int argc,char *argv[]) {
 
   case ( MMG5_FMT_MeditASCII ): case ( MMG5_FMT_MeditBinary ):
     ier = MMG3D_loadMesh(mesh,mesh->namein);
+    printf("[DEBUG] case .mesh donc MMG5_FMT_MeditASCII\n");
     if ( ier <  1 ) { break; }
 
     /* In Lagrangian mode, the name of the displacement file has been parsed in ls */
@@ -403,13 +414,16 @@ int main(int argc,char *argv[]) {
       }
     }
     else {
+    printf("[DEBUG] pas de lagrangian\n");
       /* Facultative metric */
+    printf("[DEBUG] avant loadSol met->np = %d\n",met->np);
       if ( MMG3D_loadSol(mesh,met,met->namein) == -1 ) {
         fprintf(stderr,"\n  ## ERROR: WRONG DATA TYPE OR WRONG SOLUTION NUMBER.\n");
         MMG5_RETURN_AND_FREE(mesh,met,ls,disp,MMG5_STRONGFAILURE);
       }
     }
-
+    printf("[DEBUG] Apres loadSol met->np = %d\n",met->np);
+    printf("[DEBUG] Valeur de mesh->info.iso : %d\n", mesh->info.iso);
     /* In iso mode: read metric if any */
     if ( mesh->info.iso ) {
       if (met->namein) {
@@ -430,7 +444,17 @@ int main(int argc,char *argv[]) {
     fprintf(stderr,"  ** I/O AT FORMAT %s NOT IMPLEMENTED.\n",MMG5_Get_formatName(fmtin) );
     MMG5_RETURN_AND_FREE(mesh,met,ls,disp,MMG5_STRONGFAILURE);
   }
-
+  //printf("[DEBUG] ier =%d\n",ier);
+  if ( mesh->info.anasurf ) {
+    for ( int k = 1; k <= mesh->np; k++ ) {
+      if ( MMG3D_anasurf_isOnSphere(mesh->point[k].c) ) {
+        if (mesh->point[k].ref != REF_SPHERE) {
+          //printf("hey\n");
+          mesh->point[k].ref = REF_SPHERE;}
+      }
+    }
+  }
+  
   if ( ier < 1 ) {
     if ( ier == 0 ) {
       fprintf(stderr,"  ** %s  NOT FOUND.\n",mesh->namein);
@@ -438,7 +462,6 @@ int main(int argc,char *argv[]) {
     }
     MMG5_RETURN_AND_FREE(mesh,met,ls,disp,MMG5_STRONGFAILURE);
   }
-
   /* Check input data */
   if ( mesh->info.lag > -1 ) {
     if ( met->namein ) {
@@ -463,7 +486,7 @@ int main(int argc,char *argv[]) {
     printim(MMG5_ctim[1].gdif,stim);
     fprintf(stdout,"  -- DATA READING COMPLETED.     %s\n",stim);
   }
-
+  printf("[DEBUG] Valeur de mesh->mark: %d\n", mesh->mark);
   if ( mesh->mark ) {
     /* Save a local parameters file containing the default parameters */
     ier = MMG3D_defaultOption(mesh,met,disp);
@@ -479,15 +502,34 @@ int main(int argc,char *argv[]) {
   }
   /* Remeshing mode */
   else {
+    //printf("[DEBUG] Dans le else \n");
     if ( met && ls && met->namein && ls->namein ) {
       fprintf(stdout,"\n  ## ERROR: IMPOSSIBLE TO PROVIDE BOTH A METRIC"
               " AND A SOLUTION IN ADAPTATION MODE.\n");
       MMG5_RETURN_AND_FREE(mesh,met,ls,disp,MMG5_STRONGFAILURE);
     }
     ier = MMG3D_mmg3dlib(mesh,met);
+    /*
+    if ( mesh->info.anasurf ) {
+    printf("\n[DIAG AVANT] Points de bord sphere:\n");
+    MMG5_int k;
+    for (k=1; k<=mesh->np; k++) {
+        MMG5_pPoint ppt = &mesh->point[k];
+        if ( !(ppt->tag & MG_BDY) ) continue;
+        double dx=ppt->c[0]-SPHERE_CX;
+        double dy=ppt->c[1]-SPHERE_CY;
+        double dz=ppt->c[2]-SPHERE_CZ;
+        double d=sqrt(dx*dx+dy*dy+dz*dz);
+        if ( d > 0.15 && d < 0.35 )
+            printf("  ip=%d  ref=%d  tag=%d  dist=%.6f  err=%.6f\n",
+                   (int)k, (int)ppt->ref, (int)ppt->tag,
+                   d, fabs(d-SPHERE_R));
+    
   }
-
+}*/
+  }
   if ( ier != MMG5_STRONGFAILURE ) {
+    printf("[DEBUG] Aucune erreur\n");
     /** Save files at medit or Gmsh format */
     chrono(ON,&MMG5_ctim[1]);
     if ( mesh->info.imprim > 0 )

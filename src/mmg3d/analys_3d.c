@@ -35,6 +35,22 @@
 
 #include "libmmg3d.h"
 #include "libmmg3d_private.h"
+#include "anasurf.c"
+
+static void count_tags(MMG5_pMesh mesh, const char *where) {
+  MMG5_int crn=0, req=0, geo=0, ref=0, nom=0;
+  for (MMG5_int k=1; k<=mesh->np; k++) {
+    MMG5_pPoint ppt = &mesh->point[k];
+    if (!MG_VOK(ppt)) continue;
+    if (ppt->tag & MG_CRN) crn++;
+    if (ppt->tag & MG_REQ) req++;
+    if (ppt->tag & MG_GEO) geo++;
+    if (ppt->tag & MG_REF) ref++;
+    if (ppt->tag & MG_NOM) nom++;
+  }
+  printf("[TAGS %-35s] CRN=%d REQ=%d GEO=%d REF=%d NOM=%d\n",
+         where, (int)crn, (int)req, (int)geo, (int)ref, (int)nom);
+}
 
 /**
  * \param mesh pointer towarad the mesh structure.
@@ -344,6 +360,17 @@ int MMG5_setdhd(MMG5_pMesh mesh) {
         continue;
       }
 
+      if ( mesh->info.anasurf ) {
+        i1 = MMG5_inxt2[i];
+        i2 = MMG5_iprv2[i];
+        MMG5_int ip1 = pt->v[i1];
+        MMG5_int ip2 = pt->v[i2];
+        if ( mesh->point[ip1].ref == REF_SPHERE ||
+             mesh->point[ip2].ref == REF_SPHERE ) {
+          continue;  /* on ne pose pas MG_GEO ni MG_REF sur la sphere */
+        }
+      }
+
       kk  = adja[i] / 3;
       ii  = adja[i] % 3;
 
@@ -403,6 +430,17 @@ int MMG5_setdhd(MMG5_pMesh mesh) {
         continue;
       }
 
+      if ( mesh->info.anasurf ) {
+        i1 = MMG5_inxt2[i];
+        i2 = MMG5_iprv2[i];
+        MMG5_int ip1 = pt->v[i1];
+        MMG5_int ip2 = pt->v[i2];
+        if ( mesh->point[ip1].ref == REF_SPHERE &&
+             mesh->point[ip2].ref == REF_SPHERE ) {
+          continue;  /* pas de ridge sur la sphère */
+        }
+      }
+
       kk  = adja[i] / 3;
       ii  = adja[i] % 3;
 
@@ -457,7 +495,124 @@ int MMG5_setdhd(MMG5_pMesh mesh) {
     fprintf(stdout,"     %" MMG5_PRId " ridges removed\n",nrrm);
   }
 
+  //   /* --- DEBUG : afficher toutes les infos sur l'arete 50-55 --- */
+  // for (k=1; k<=mesh->nt; k++) {
+  //   pt = &mesh->tria[k];
+  //   if ( !MG_EOK(pt) ) continue;
 
+  //   for (i=0; i<3; i++) {
+  //     i1 = MMG5_inxt2[i];
+  //     i2 = MMG5_iprv2[i];
+  //     MMG5_int ip1 = pt->v[i1];
+  //     MMG5_int ip2 = pt->v[i2];
+
+  //     if ( (ip1==50 && ip2==55) || (ip1==55 && ip2==50) ) {
+  //       MMG5_pPoint p1 = &mesh->point[ip1];
+  //       MMG5_pPoint p2 = &mesh->point[ip2];
+
+  //       /* info voisin */
+  //       adja = &mesh->adjt[3*(k-1)+1];
+  //       kk = adja[i] / 3;
+  //       ii = adja[i] % 3;
+
+  //       /* normales des 2 triangles + angle */
+  //       double na[3], nb[3], cosang;
+  //       MMG5_nortri(mesh,pt,na);
+  //       cosang = 0.0;
+  //       if ( kk ) {
+  //         pt1 = &mesh->tria[kk];
+  //         MMG5_nortri(mesh,pt1,nb);
+  //         cosang = na[0]*nb[0] + na[1]*nb[1] + na[2]*nb[2];
+  //       }
+
+  //       printf("\n=== EDGE 50-55 trouvee dans tria k=%d ===\n", (int)k);
+  //       printf("  tria k=%d  v=(%d,%d,%d)  ref=%d\n",
+  //              (int)k, (int)pt->v[0], (int)pt->v[1], (int)pt->v[2], pt->ref);
+  //       printf("  voisin kk=%d", (int)kk);
+  //       if ( kk ) {
+  //         printf("  v=(%d,%d,%d)  ref=%d",
+  //                (int)pt1->v[0], (int)pt1->v[1], (int)pt1->v[2], pt1->ref);
+  //       }
+  //       printf("\n");
+
+  //       printf("  -- tag arete dans tria %d (local i=%d) : %d\n", (int)k, i, pt->tag[i]);
+  //       printf("     MG_GEO=%d  MG_REF=%d  MG_REQ=%d  MG_NOM=%d  MG_BDY=%d  MG_CRN=%d\n",
+  //              (pt->tag[i] & MG_GEO) ? 1 : 0,
+  //              (pt->tag[i] & MG_REF) ? 1 : 0,
+  //              (pt->tag[i] & MG_REQ) ? 1 : 0,
+  //              (pt->tag[i] & MG_NOM) ? 1 : 0,
+  //              (pt->tag[i] & MG_BDY) ? 1 : 0,
+  //              (pt->tag[i] & MG_CRN) ? 1 : 0);
+
+  //       if ( kk ) {
+  //         printf("  -- tag arete dans voisin %d (local ii=%d) : %d\n",
+  //                (int)kk, ii, pt1->tag[ii]);
+  //         printf("     MG_GEO=%d  MG_REF=%d  MG_REQ=%d  MG_NOM=%d  MG_BDY=%d\n",
+  //                (pt1->tag[ii] & MG_GEO) ? 1 : 0,
+  //                (pt1->tag[ii] & MG_REF) ? 1 : 0,
+  //                (pt1->tag[ii] & MG_REQ) ? 1 : 0,
+  //                (pt1->tag[ii] & MG_NOM) ? 1 : 0,
+  //                (pt1->tag[ii] & MG_BDY) ? 1 : 0);
+  //       }
+
+  //       printf("  -- sommet %d : pos=(%.4f,%.4f,%.4f)  ref=%d  tag=%d\n",
+  //              (int)ip1, p1->c[0], p1->c[1], p1->c[2], p1->ref, p1->tag);
+  //       printf("     CRN=%d REQ=%d GEO=%d REF=%d NOM=%d BDY=%d\n",
+  //              (p1->tag & MG_CRN) ? 1 : 0,
+  //              (p1->tag & MG_REQ) ? 1 : 0,
+  //              (p1->tag & MG_GEO) ? 1 : 0,
+  //              (p1->tag & MG_REF) ? 1 : 0,
+  //              (p1->tag & MG_NOM) ? 1 : 0,
+  //              (p1->tag & MG_BDY) ? 1 : 0);
+
+  //       printf("  -- sommet %d : pos=(%.4f,%.4f,%.4f)  ref=%d  tag=%d\n",
+  //              (int)ip2, p2->c[0], p2->c[1], p2->c[2], p2->ref, p2->tag);
+  //       printf("     CRN=%d REQ=%d GEO=%d REF=%d NOM=%d BDY=%d\n",
+  //              (p2->tag & MG_CRN) ? 1 : 0,
+  //              (p2->tag & MG_REQ) ? 1 : 0,
+  //              (p2->tag & MG_GEO) ? 1 : 0,
+  //              (p2->tag & MG_REF) ? 1 : 0,
+  //              (p2->tag & MG_NOM) ? 1 : 0,
+  //              (p2->tag & MG_BDY) ? 1 : 0);
+
+  //       /* longueur geometrique */
+  //       double dx = p2->c[0]-p1->c[0];
+  //       double dy = p2->c[1]-p1->c[1];
+  //       double dz = p2->c[2]-p1->c[2];
+  //       printf("  -- longueur euclidienne = %.6f\n", sqrt(dx*dx+dy*dy+dz*dz));
+
+  //       /* angle diedre */
+  //       if ( kk ) {
+  //         double ang_deg = acos(cosang) * 180.0 / M_PI;
+  //         printf("  -- cos(angle diedre) = %.6f  ->  angle = %.2f deg\n",
+  //                cosang, ang_deg);
+  //         printf("  -- seuil mesh->info.dhd (cos) = %.6f  ->  deviendrait ridge si cos <= seuil\n",
+  //                mesh->info.dhd);
+  //       }
+  //       printf("==============================================\n\n");
+  //     }
+  //   }
+  // }
+
+
+  //   /* À la fin de setdhd, avant return */
+  // printf("\n=== Arêtes ridge touchant 50 ou 55 ===\n");
+  // for (k=1; k<=mesh->nt; k++) {
+  //   pt = &mesh->tria[k];
+  //   if ( !MG_EOK(pt) ) continue;
+  //   for (i=0; i<3; i++) {
+  //     if ( !(pt->tag[i] & MG_GEO) ) continue;
+  //     i1 = MMG5_inxt2[i];
+  //     i2 = MMG5_iprv2[i];
+  //     MMG5_int ip1 = pt->v[i1];
+  //     MMG5_int ip2 = pt->v[i2];
+  //     if ( ip1==50 || ip1==55 || ip2==50 || ip2==55 ) {
+  //       printf("  tria %d arete %d-%d  refs=(%d,%d)\n",
+  //              (int)k, (int)ip1, (int)ip2,
+  //              mesh->point[ip1].ref, mesh->point[ip2].ref);
+  //     }
+  //   }
+  // }
   return 1;
 }
 
@@ -1481,6 +1636,210 @@ int MMG3D_analys(MMG5_pMesh mesh) {
   for( ip = 1; ip <= mesh->np; ip++ )
     mesh->point[ip].src = ip;
 #endif
+  // if ( mesh->info.anasurf ) {
+  //   MMG5_int IP1 = 55, IP2 = 52;
+
+  //   printf("\n");
+  //   printf("╔══════════════════════════════════════════════════════════════╗\n");
+  //   printf("║     SCANNER COMPLET ARETE %d - %d   (sortie de analys)      ║\n",
+  //          (int)IP1, (int)IP2);
+  //   printf("╚══════════════════════════════════════════════════════════════╝\n");
+
+  //   /* ────────────────────────────────────────────────────────────────
+  //    * 1. ETAT DES SOMMETS
+  //    * ──────────────────────────────────────────────────────────────── */
+  //   printf("\n──── 1. SOMMETS ────\n");
+  //   MMG5_int ids[2] = {IP1, IP2};
+  //   for (int ii=0; ii<2; ii++) {
+  //     MMG5_int vid = ids[ii];
+  //     if ( vid > mesh->np ) { printf("  [%d] HORS LIMITES\n",(int)vid); continue; }
+  //     MMG5_pPoint ppt = &mesh->point[vid];
+  //     printf("  [POINT %d]\n", (int)vid);
+  //     printf("    pos = (%.6f, %.6f, %.6f)\n", ppt->c[0], ppt->c[1], ppt->c[2]);
+  //     printf("    ref = %d   xp = %d   tag = %d\n", ppt->ref, (int)ppt->xp, ppt->tag);
+  //     printf("    tags : BDY=%d GEO=%d CRN=%d REQ=%d REF=%d NOM=%d\n",
+  //            (ppt->tag & MG_BDY) ? 1 : 0,
+  //            (ppt->tag & MG_GEO) ? 1 : 0,
+  //            (ppt->tag & MG_CRN) ? 1 : 0,
+  //            (ppt->tag & MG_REQ) ? 1 : 0,
+  //            (ppt->tag & MG_REF) ? 1 : 0,
+  //            (ppt->tag & MG_NOM) ? 1 : 0);
+  //     printf("    MG_SIN(tag) = %d\n", MG_SIN(ppt->tag) ? 1 : 0);
+  //     printf("    tangente ppt->n = (%.6f, %.6f, %.6f)\n",
+  //            ppt->n[0], ppt->n[1], ppt->n[2]);
+  //     if ( ppt->xp && mesh->xpoint ) {
+  //       MMG5_pxPoint pxp = &mesh->xpoint[ppt->xp];
+  //       double nn1 = sqrt(pxp->n1[0]*pxp->n1[0]+pxp->n1[1]*pxp->n1[1]+pxp->n1[2]*pxp->n1[2]);
+  //       double nn2 = sqrt(pxp->n2[0]*pxp->n2[0]+pxp->n2[1]*pxp->n2[1]+pxp->n2[2]*pxp->n2[2]);
+  //       printf("    xpoint.n1 = (%.6f, %.6f, %.6f)  |n1|=%.6f\n",
+  //              pxp->n1[0], pxp->n1[1], pxp->n1[2], nn1);
+  //       printf("    xpoint.n2 = (%.6f, %.6f, %.6f)  |n2|=%.6f\n",
+  //              pxp->n2[0], pxp->n2[1], pxp->n2[2], nn2);
+  //       printf("    xpoint.nnor = %d\n", pxp->nnor);
+  //     } else {
+  //       printf("    xpoint : AUCUN\n");
+  //     }
+  //   }
+
+  //   /* ────────────────────────────────────────────────────────────────
+  //    * 2. TABLEAU GLOBAL DES ARETES (mesh->edge)
+  //    * ──────────────────────────────────────────────────────────────── */
+  //   printf("\n──── 2. ARETES GLOBALES (mesh->edge, na=%d) ────\n", (int)mesh->na);
+  //   if ( mesh->edge && mesh->na > 0 ) {
+  //     int found_edge = 0;
+  //     for (MMG5_int k=1; k<=mesh->na; k++) {
+  //       MMG5_pEdge pa = &mesh->edge[k];
+  //       if ( (pa->a==IP1 && pa->b==IP2) || (pa->a==IP2 && pa->b==IP1) ) {
+  //         printf("  [EDGE %d]  a=%d b=%d  ref=%d  tag=%d\n",
+  //                (int)k, (int)pa->a, (int)pa->b, pa->ref, pa->tag);
+  //         printf("    tags : BDY=%d GEO=%d CRN=%d REQ=%d REF=%d NOM=%d\n",
+  //                (pa->tag & MG_BDY) ? 1 : 0,
+  //                (pa->tag & MG_GEO) ? 1 : 0,
+  //                (pa->tag & MG_CRN) ? 1 : 0,
+  //                (pa->tag & MG_REQ) ? 1 : 0,
+  //                (pa->tag & MG_REF) ? 1 : 0,
+  //                (pa->tag & MG_NOM) ? 1 : 0);
+  //         found_edge = 1;
+  //       }
+  //     }
+  //     if ( !found_edge ) printf("  -> arete %d-%d NON TROUVEE dans mesh->edge\n", (int)IP1,(int)IP2);
+  //   } else {
+  //     printf("  -> pas de tableau mesh->edge (na=0)\n");
+  //   }
+
+  //   /* ────────────────────────────────────────────────────────────────
+  //    * 3. TRIANGLES DE SURFACE (mesh->tria)
+  //    * ──────────────────────────────────────────────────────────────── */
+  //   printf("\n──── 3. TRIANGLES DE SURFACE (mesh->tria, nt=%d) ────\n", (int)mesh->nt);
+  //   if ( mesh->tria && mesh->nt > 0 ) {
+  //     int found_tria = 0;
+  //     for (MMG5_int k=1; k<=mesh->nt; k++) {
+  //       MMG5_pTria pt = &mesh->tria[k];
+  //       if ( !MG_EOK(pt) ) continue;
+
+  //       /* Chercher si l'arete IP1-IP2 est une arete locale du triangle */
+  //       for (int8_t i=0; i<3; i++) {
+  //         int8_t i1 = MMG5_inxt2[i];
+  //         int8_t i2 = MMG5_iprv2[i];
+  //         MMG5_int va = pt->v[i1];
+  //         MMG5_int vb = pt->v[i2];
+  //         if ( (va==IP1 && vb==IP2) || (va==IP2 && vb==IP1) ) {
+  //           printf("  [TRIA %d]  v=(%d,%d,%d)  ref=%d  arete locale i=%d (%d-%d)\n",
+  //                  (int)k, (int)pt->v[0], (int)pt->v[1], (int)pt->v[2],
+  //                  pt->ref, i, (int)va, (int)vb);
+  //           printf("    tag[%d] = %d  ->  BDY=%d GEO=%d CRN=%d REQ=%d REF=%d NOM=%d\n",
+  //                  i, pt->tag[i],
+  //                  (pt->tag[i] & MG_BDY) ? 1 : 0,
+  //                  (pt->tag[i] & MG_GEO) ? 1 : 0,
+  //                  (pt->tag[i] & MG_CRN) ? 1 : 0,
+  //                  (pt->tag[i] & MG_REQ) ? 1 : 0,
+  //                  (pt->tag[i] & MG_REF) ? 1 : 0,
+  //                  (pt->tag[i] & MG_NOM) ? 1 : 0);
+  //           printf("    edg[%d] = %d\n", i, (int)pt->edg[i]);
+  //           found_tria = 1;
+  //         }
+  //       }
+  //     }
+  //     if ( !found_tria ) printf("  -> arete %d-%d NON TROUVEE dans mesh->tria\n", (int)IP1,(int)IP2);
+  //   } else {
+  //     printf("  -> pas de triangles (nt=0)\n");
+  //   }
+
+  //   /* ────────────────────────────────────────────────────────────────
+  //    * 4. TOPOLOGIE VOLUMIQUE (mesh->tetra + mesh->xtetra)
+  //    * ──────────────────────────────────────────────────────────────── */
+  //   printf("\n──── 4. XTETRA (ne=%d) ────\n", (int)mesh->ne);
+  //   {
+  //     int found_xt = 0;
+  //     for (MMG5_int k=1; k<=mesh->ne; k++) {
+  //       MMG5_pTetra pt = &mesh->tetra[k];
+  //       if ( !MG_EOK(pt) ) continue;
+
+  //       /* Parcourir les 6 aretes du tetra */
+  //       for (int8_t ia=0; ia<6; ia++) {
+  //         MMG5_int va = pt->v[MMG5_iare[ia][0]];
+  //         MMG5_int vb = pt->v[MMG5_iare[ia][1]];
+  //         if ( (va==IP1 && vb==IP2) || (va==IP2 && vb==IP1) ) {
+  //           printf("  [TETRA %d]  v=(%d,%d,%d,%d)  ref=%d  arete locale ia=%d (%d-%d)\n",
+  //                  (int)k,
+  //                  (int)pt->v[0], (int)pt->v[1], (int)pt->v[2], (int)pt->v[3],
+  //                  pt->ref, ia, (int)va, (int)vb);
+  //           printf("    xt = %d\n", (int)pt->xt);
+
+  //           if ( pt->xt ) {
+  //             MMG5_pxTetra pxt = &mesh->xtetra[pt->xt];
+  //             printf("    xtetra.tag[%d] = %d  ->  BDY=%d GEO=%d CRN=%d REQ=%d REF=%d NOM=%d\n",
+  //                    ia, pxt->tag[ia],
+  //                    (pxt->tag[ia] & MG_BDY) ? 1 : 0,
+  //                    (pxt->tag[ia] & MG_GEO) ? 1 : 0,
+  //                    (pxt->tag[ia] & MG_CRN) ? 1 : 0,
+  //                    (pxt->tag[ia] & MG_REQ) ? 1 : 0,
+  //                    (pxt->tag[ia] & MG_REF) ? 1 : 0,
+  //                    (pxt->tag[ia] & MG_NOM) ? 1 : 0);
+  //             printf("    xtetra.edg[%d] = %d\n", ia, (int)pxt->edg[ia]);
+
+  //             /* Faces adjacentes a cette arete */
+  //             int8_t f0 = MMG5_ifar[ia][0];
+  //             int8_t f1 = MMG5_ifar[ia][1];
+  //             printf("    faces adjacentes : f0=%d (ftag=%d ref=%d)  f1=%d (ftag=%d ref=%d)\n",
+  //                    f0, pxt->ftag[f0], (int)pxt->ref[f0],
+  //                    f1, pxt->ftag[f1], (int)pxt->ref[f1]);
+  //             printf("    f0 BDY=%d  f1 BDY=%d\n",
+  //                    (pxt->ftag[f0] & MG_BDY) ? 1 : 0,
+  //                    (pxt->ftag[f1] & MG_BDY) ? 1 : 0);
+  //           } else {
+  //             printf("    -> pas de xtetra\n");
+  //           }
+  //           found_xt = 1;
+  //         }
+  //       }
+  //     }
+  //     if ( !found_xt ) printf("  -> arete %d-%d NON TROUVEE dans mesh->tetra\n", (int)IP1,(int)IP2);
+  //   }
+
+  //   /* ────────────────────────────────────────────────────────────────
+  //    * 5. HASH TABLE GEOMETRIQUE (mesh->htab.geom)
+  //    * ──────────────────────────────────────────────────────────────── */
+  //   printf("\n──── 5. HASH GEOM (htab.geom) ────\n");
+  //   if ( mesh->htab.geom ) {
+  //     int found_hg = 0;
+  //     for (MMG5_int k=0; k<=mesh->htab.max; k++) {
+  //       MMG5_hgeom *ph = &mesh->htab.geom[k];
+  //       if ( !ph->a ) continue;
+  //       if ( (ph->a==IP1 && ph->b==IP2) || (ph->a==IP2 && ph->b==IP1) ) {
+  //         printf("  [HGEOM %d]  a=%d b=%d  ref=%d  tag=%d\n",
+  //                (int)k, (int)ph->a, (int)ph->b, (int)ph->ref, ph->tag);
+  //         printf("    tags : BDY=%d GEO=%d CRN=%d REQ=%d REF=%d NOM=%d\n",
+  //                (ph->tag & MG_BDY) ? 1 : 0,
+  //                (ph->tag & MG_GEO) ? 1 : 0,
+  //                (ph->tag & MG_CRN) ? 1 : 0,
+  //                (ph->tag & MG_REQ) ? 1 : 0,
+  //                (ph->tag & MG_REF) ? 1 : 0,
+  //                (ph->tag & MG_NOM) ? 1 : 0);
+  //         found_hg = 1;
+  //       }
+  //     }
+  //     if ( !found_hg ) printf("  -> arete %d-%d NON TROUVEE dans htab.geom\n", (int)IP1,(int)IP2);
+  //   } else {
+  //     printf("  -> pas de htab.geom\n");
+  //   }
+
+  //   /* ────────────────────────────────────────────────────────────────
+  //    * 6. LONGUEUR GEOMETRIQUE
+  //    * ──────────────────────────────────────────────────────────────── */
+  //   printf("\n──── 6. LONGUEUR ────\n");
+  //   if ( IP1 <= mesh->np && IP2 <= mesh->np ) {
+  //     MMG5_pPoint p1 = &mesh->point[IP1];
+  //     MMG5_pPoint p2 = &mesh->point[IP2];
+  //     double dx = p2->c[0]-p1->c[0];
+  //     double dy = p2->c[1]-p1->c[1];
+  //     double dz = p2->c[2]-p1->c[2];
+  //     printf("  longueur euclidienne %d-%d = %.6f\n", (int)IP1, (int)IP2,
+  //            sqrt(dx*dx+dy*dy+dz*dz));
+  //   }
+
+  //   printf("\n══════════════════════════════════════════════════════════════\n\n");
+  // }
 
   /* release memory */
   MMG5_DEL_MEM(mesh,mesh->htab.geom);
@@ -1492,3 +1851,4 @@ int MMG3D_analys(MMG5_pMesh mesh) {
 
   return 1;
 }
+

@@ -238,17 +238,17 @@ enum MMG5_entities {
  * \brief Type of supported file format
  */
 enum MMG5_Format {
-  MMG5_FMT_MeditASCII, /*!< ASCII Medit (.mesh) */
-  MMG5_FMT_MeditBinary, /*!< Binary Medit (.meshb) */
-  MMG5_FMT_GmshASCII, /*!< ASCII Gmsh */
-  MMG5_FMT_GmshBinary, /*!< Binary Gmsh */
-  MMG5_FMT_VtkPvtp, /*!< VTK pvtp */
-  MMG5_FMT_VtkPvtu, /*!< VTK pvtu */
-  MMG5_FMT_VtkVtu, /*!< VTK vtu */
-  MMG5_FMT_VtkVtp, /*!< VTK vtp */
-  MMG5_FMT_VtkVtk, /*!< VTK vtk */
-  MMG5_FMT_Tetgen, /*!< Tetgen or Triangle */
-  MMG5_FMT_Unknown /*!< Unrecognized */
+  MMG5_FMT_MeditASCII, /* Valeur : 0  -> Format Medit texte (.mesh) */
+  MMG5_FMT_MeditBinary, /* Valeur : 1  -> Format Medit binaire (.meshb) */
+  MMG5_FMT_GmshASCII, /* Valeur : 2  -> Format Gmsh texte */
+  MMG5_FMT_GmshBinary, /* Valeur : 3  -> Format Gmsh binaire */
+  MMG5_FMT_VtkPvtp, /* Valeur : 4  -> Format VTK partitionné (polygones) */
+  MMG5_FMT_VtkPvtu, /* Valeur : 5  -> Format VTK partitionné (non structuré) */
+  MMG5_FMT_VtkVtu, /* Valeur : 6  -> Format VTK non structuré standard */
+  MMG5_FMT_VtkVtp, /* Valeur : 7  -> Format VTK polydata standard */
+  MMG5_FMT_VtkVtk, /* Valeur : 8  -> Ancien format VTK */
+  MMG5_FMT_Tetgen, /* Valeur : 9  -> Format spécifique Tetgen (.node/.ele) */
+  MMG5_FMT_Unknown /* Valeur : 10 -> Utilisé pour la gestion d'erreurs */
 };
 
 /**
@@ -550,7 +550,7 @@ typedef struct {
                           is \a MG_Vert, MG_Tria and MG_Tetra */
   int8_t        sethmin; /*!< 1 if user set hmin, 0 otherwise (needed for multiple library calls) */
   int8_t        sethmax; /*!< 1 if user set hmin, 0 otherwise (needed for multiple library calls) */
-  uint8_t       ani, optim, optimLES, noinsert, noswap, nomove, nosurf, nosizreq;
+  uint8_t       ani, optim, optimLES, noinsert, noswap, nomove, nosurf, nosizreq, anasurf, egads;
   uint8_t       metRidTyp;
   char          *fparam; /*!< name of the parameter file */
   /*!< metRidTyp

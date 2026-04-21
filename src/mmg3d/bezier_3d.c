@@ -329,7 +329,6 @@ int MMG5_mmg3dBezierCP(MMG5_pMesh mesh,MMG5_Tria *pt,MMG5_pBezier pb,int8_t ori)
   double         *n1,*n2,nt[3],t1[3],t2[3],ps,ps2,dd,ux,uy,uz,l,ll,alpha;
   MMG5_int       ia,ib,ic;
   int8_t         i,i1,i2,im,isnm;
-
   ia   = pt->v[0];
   ib   = pt->v[1];
   ic   = pt->v[2];
@@ -606,6 +605,9 @@ int MMG5_mmg3dBezierCP(MMG5_pMesh mesh,MMG5_Tria *pt,MMG5_pBezier pb,int8_t ori)
  *
  */
 int MMG3D_bezierInt(MMG5_pBezier pb,double uv[2],double o[3],double no[3],double to[3]) {
+  /*static int call_count = 0;
+  call_count++;
+  printf("[bezierInt] appel n°%d\n", call_count);*/
   double    dd,u,v,w,ps,ux,uy,uz;
   int8_t    i;
 
@@ -628,7 +630,6 @@ int MMG3D_bezierInt(MMG5_pBezier pb,double uv[2],double o[3],double no[3],double
        no[i] = pb->n[0][i]*w + pb->n[1][i]*u + pb->n[2][i]*v; */
   }
   assert ( no[0]*no[0] + no[1]*no[1] + no[2]*no[2] > 0. );
-
   /* tangent */
   if ( w < MMG5_EPSD2 ) {
     ux = pb->b[2][0] - pb->b[1][0];
@@ -757,5 +758,9 @@ int MMG3D_bezierInt(MMG5_pBezier pb,double uv[2],double o[3],double no[3],double
     to[2] *= dd;
   }
 
+  //if ( ip == 479 ) {printf("[CREATION] ip=%d  x=%.10f  y=%.10f  z=%.10f\n",(int)ip,mesh->point[ip].c[0],mesh->point[ip].c[1],mesh->point[ip].c[2]);}
+
+  //printf("[DEBUG] BezierInt : X=%f, Y=%f, Z=%f\n", o[0], o[1], o[2]);
+  //printf("[DEBUG] BezierInt UV : u=%f, v=%f, w=%f\n", u, v, w);
   return 1;
 }

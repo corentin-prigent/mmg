@@ -237,6 +237,7 @@ int MMG3D_defaultValues(MMG5_pMesh mesh) {
  */
 int MMG3D_storeknownar(int argc,char *argv[],MMG5_pMesh mesh,MMG5_pSol met,
                        MMG5_pSol sol,int *mmgArgc, char *mmgArgv[]) {
+  printf("[DEBUG] MMG3D_storeknownar dans libmmg3d_tools.c\n");
   MMG5_pSol tmp = NULL;
   double  val;
   int     i;
@@ -266,6 +267,14 @@ int MMG3D_storeknownar(int argc,char *argv[],MMG5_pMesh mesh,MMG5_pSol met,
               return 0;
             }
           }
+       }
+       else if ( !strcmp(argv[i],"-anasurf") ) {
+          mesh->info.anasurf = 1;
+          printf("Anasurf mode: Bezier surface creation disabled\n");
+       }
+       else if ( !strcmp(argv[i],"-egads") ) {
+          mesh->info.egads = 1;
+          printf("Egads mode\n");
        }
        else {
          /* Arg unknown by Mmg: arg starts with -a but is not known */
@@ -650,7 +659,7 @@ int MMG3D_storeknownar(int argc,char *argv[],MMG5_pMesh mesh,MMG5_pSol met,
     }
     i++;
   }
-
+  printf("[DEBUG] Fin de MMG3D_storeknownar\n");
   return 1;
 }
 
@@ -658,6 +667,8 @@ int MMG3D_storeknownar(int argc,char *argv[],MMG5_pMesh mesh,MMG5_pSol met,
 // In ls mode : metric must be provided using -met option (-sol or default is the ls).
 // In adp mode : -sol or -met or default allow to store the metric.
 int MMG3D_parsar(int argc,char *argv[],MMG5_pMesh mesh,MMG5_pSol met,MMG5_pSol sol) {
+  printf("[DEBUG] On lit la commande rentrée\n");
+  printf("[DEBUG] MMG3D_parsar dans libmmg3d_tools.c\n");
   MMG5_pSol tmp = NULL;
   int     i;
   char    namein[MMG5_FILESTR_LGTH];
@@ -761,7 +772,7 @@ int MMG3D_parsar(int argc,char *argv[],MMG5_pMesh mesh,MMG5_pSol met,MMG5_pSol s
     if ( !MMG3D_Set_outputSolName(mesh,met,"") )
       return 0;
   }
-
+  printf("[DEBUG] Fin de MMG3D_parsar\n");
   return 1;
 }
 
