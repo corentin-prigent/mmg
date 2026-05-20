@@ -287,6 +287,13 @@ INCLUDE(add-mmg-options)
 #####
 ###############################################################################
 
+###############################################################################
+#####         EGADSlite
+###############################################################################
+SET(EGADS_INC /home/eelleb/Desktop/ESP/EngSketchPad/src/EGADS/include)
+SET(EGADS_LIB /home/eelleb/Desktop/test_egads/lib)
+INCLUDE_DIRECTORIES(${EGADS_INC})
+SET(LIBRARIES ${LIBRARIES} -L${EGADS_LIB} -legadslite -Wl,-rpath,${EGADS_LIB})
 INCLUDE(build-targets)
 
 ###############################################################################

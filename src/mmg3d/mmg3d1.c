@@ -75,9 +75,9 @@ void MMG3D_set_geom(MMG5_pMesh mesh, MMG5_pPoint ppt,
     ppt->ref = edgref;
   }
 
-  if ( mesh->info.anasurf && MMG3D_anasurf_isOnSphere(ppt->c) ) {
-    ppt->ref = REF_SPHERE;
-  }
+  // if ( mesh->info.anasurf && MMG3D_anasurf_isOnSphere(ppt->c) ) {
+  //   ppt->ref = REF_SPHERE;
+  // }
 
   // /* apres */
   // if ( fabs(ppt->c[0] - 0.54166666666667) < 1e-6 &&
@@ -186,12 +186,9 @@ int MMG3D_dichoto(MMG5_pMesh mesh,MMG5_pSol met,MMG5_int k,MMG5_int *vx) {
       p[i][1] = ps->c[1];
       p[i][2] = ps->c[2];
 
-      /* Détection sphère */
-      if ( mesh->info.anasurf &&
-           pa->ref == REF_SPHERE && pb->ref == REF_SPHERE ) {
-        on_sphere[i] = 1;
+      if (mesh->info.anasurf) {
         double no_tmp[3];
-        MMG3D_anasurf_projectOnSphere(o[i], o[i], no_tmp);
+        MMG3D_anasurf_projectEGADS(o[i], o[i], no_tmp);
       }
     }
   }
@@ -209,9 +206,9 @@ int MMG3D_dichoto(MMG5_pMesh mesh,MMG5_pSol met,MMG5_int k,MMG5_int *vx) {
         ps->c[1] = o[i][1] + t*(p[i][1] - o[i][1]);
         ps->c[2] = o[i][2] + t*(p[i][2] - o[i][2]);
 
-        if ( on_sphere[i] ) {
+        if ( mesh->info.anasurf ) {
           double no_tmp[3];
-          MMG3D_anasurf_projectOnSphere(ps->c, ps->c, no_tmp);
+          MMG3D_anasurf_projectEGADS(ps->c, ps->c, no_tmp);
         }
       }
     }
@@ -269,7 +266,7 @@ int MMG3D_dichoto(MMG5_pMesh mesh,MMG5_pSol met,MMG5_int k,MMG5_int *vx) {
 
         if ( on_sphere[i] ) {
           double no_tmp[3];
-          MMG3D_anasurf_projectOnSphere(ps->c, ps->c, no_tmp);
+          MMG3D_anasurf_projectEGADS(ps->c, ps->c, no_tmp);
         }
       }
     }
@@ -398,10 +395,9 @@ int MMG3D_dichoto1b(MMG5_pMesh mesh,MMG5_pSol met,int64_t *list,int ret,MMG5_int
   ppt->c[2] = m[2] + t*(o[2]-m[2]);
 
   /* Reprojection finale */
-  if ( mesh->info.anasurf &&
-       p0->ref == REF_SPHERE && p1->ref == REF_SPHERE ) {
+  if ( mesh->info.anasurf ) {
     double no_tmp[3];
-    MMG3D_anasurf_projectOnSphere(ppt->c, ppt->c, no_tmp);
+    MMG3D_anasurf_projectEGADS(ppt->c, ppt->c, no_tmp);
   }
 
   return MMG3D_simbulgept(mesh,met,list,ret,ip);
@@ -1893,14 +1889,12 @@ int8_t MMG3D_build_bezierEdge(MMG5_pMesh mesh,MMG5_int k,
   }
 
   /** a/ Analytical surface path (bypasses Bézier) */
-  if ( mesh->info.anasurf &&
-       mesh->point[ip1].ref == REF_SPHERE &&
-       mesh->point[ip2].ref == REF_SPHERE ) {
+  if ( mesh->info.anasurf ) {
     double xyz[3];
     xyz[0] = 0.5*(mesh->point[ip1].c[0] + mesh->point[ip2].c[0]);
     xyz[1] = 0.5*(mesh->point[ip1].c[1] + mesh->point[ip2].c[1]);
     xyz[2] = 0.5*(mesh->point[ip1].c[2] + mesh->point[ip2].c[2]);
-    MMG3D_anasurf_projectOnSphere(xyz, o, no1);
+    MMG3D_anasurf_projectEGADS(xyz, o, no1);
     no2[0] = no1[0];  no2[1] = no1[1];  no2[2] = no1[2];
     to[0] = to[1] = to[2] = 0.0;
     *ref = REF_SPHERE;
@@ -2475,7 +2469,7 @@ MMG3D_anatets_iso(MMG5_pMesh mesh,MMG5_pSol met,int8_t typchk) {
             xyz[0] = 0.5*(mesh->point[ip1].c[0] + mesh->point[ip2].c[0]);
             xyz[1] = 0.5*(mesh->point[ip1].c[1] + mesh->point[ip2].c[1]);
             xyz[2] = 0.5*(mesh->point[ip1].c[2] + mesh->point[ip2].c[2]);
-            MMG3D_anasurf_projectOnSphere(xyz, o, no);
+            MMG3D_anasurf_projectEGADS(xyz, o, no);
             to[0] = to[1] = to[2] = 0.0;
             anasurf_done = 1;
           }
@@ -2607,7 +2601,7 @@ MMG3D_anatets_iso(MMG5_pMesh mesh,MMG5_pSol met,int8_t typchk) {
                mesh->point[ip2].ref == REF_SPHERE ) {
             /* Normale déjà correcte via projection sphérique */
             double no_sph[3];
-            MMG3D_anasurf_projectOnSphere(ppt->c, o, no_sph);
+            MMG3D_anasurf_projectEGADS(ppt->c, o, no_sph);
             if ( !MMG3D_update_rid_geom(ppt,pxp,no_sph) ) continue;
           }
           else {
@@ -2688,7 +2682,7 @@ MMG3D_anatets_iso(MMG5_pMesh mesh,MMG5_pSol met,int8_t typchk) {
                mesh->point[ip1].ref == REF_SPHERE &&
                mesh->point[ip2].ref == REF_SPHERE ) {
             double no_sph[3];
-            MMG3D_anasurf_projectOnSphere(ppt->c, o, no_sph);
+            MMG3D_anasurf_projectEGADS(ppt->c, o, no_sph);
             dd = no_sph[0]*pxp->n1[0]+no_sph[1]*pxp->n1[1]+no_sph[2]*pxp->n1[2];
             if ( dd > 1.0-MMG5_EPS ) continue;
             memcpy(pxp->n2,no_sph,3*sizeof(double));

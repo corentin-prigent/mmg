@@ -18,5 +18,8 @@
 
 void   MMG3D_anasurf_projectOnSphere(double xyz[3], double o[3], double no[3]);
 int MMG3D_anasurf_isOnSphere(double c[3]);
+int  MMG3D_anasurf_initEGADS(void);
+void MMG3D_anasurf_closeEGADS(void);
+int  MMG3D_anasurf_projectEGADS(double xyz[3], double o[3], double no[3]);
 
 #endif /* ANASURF_H */

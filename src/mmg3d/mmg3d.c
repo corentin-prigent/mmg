@@ -445,6 +445,7 @@ int main(int argc,char *argv[]) {
     MMG5_RETURN_AND_FREE(mesh,met,ls,disp,MMG5_STRONGFAILURE);
   }
   //printf("[DEBUG] ier =%d\n",ier);
+  //Change la ref du cercle
   if ( mesh->info.anasurf ) {
     for ( int k = 1; k <= mesh->np; k++ ) {
       if ( MMG3D_anasurf_isOnSphere(mesh->point[k].c) ) {
@@ -454,6 +455,14 @@ int main(int argc,char *argv[]) {
       }
     }
   }
+
+  if ( mesh->info.anasurf ) {
+  if ( MMG3D_anasurf_initEGADS() ) {
+    printf("[EGADS] Projection EGADS active\n");
+  } else {
+    printf("[EGADS] Fallback mode analytique\n");
+  }
+}
   
   if ( ier < 1 ) {
     if ( ier == 0 ) {
@@ -509,24 +518,10 @@ int main(int argc,char *argv[]) {
       MMG5_RETURN_AND_FREE(mesh,met,ls,disp,MMG5_STRONGFAILURE);
     }
     ier = MMG3D_mmg3dlib(mesh,met);
-    /*
+
     if ( mesh->info.anasurf ) {
-    printf("\n[DIAG AVANT] Points de bord sphere:\n");
-    MMG5_int k;
-    for (k=1; k<=mesh->np; k++) {
-        MMG5_pPoint ppt = &mesh->point[k];
-        if ( !(ppt->tag & MG_BDY) ) continue;
-        double dx=ppt->c[0]-SPHERE_CX;
-        double dy=ppt->c[1]-SPHERE_CY;
-        double dz=ppt->c[2]-SPHERE_CZ;
-        double d=sqrt(dx*dx+dy*dy+dz*dz);
-        if ( d > 0.15 && d < 0.35 )
-            printf("  ip=%d  ref=%d  tag=%d  dist=%.6f  err=%.6f\n",
-                   (int)k, (int)ppt->ref, (int)ppt->tag,
-                   d, fabs(d-SPHERE_R));
-    
-  }
-}*/
+      MMG3D_anasurf_closeEGADS();
+    }
   }
   if ( ier != MMG5_STRONGFAILURE ) {
     printf("[DEBUG] Aucune erreur\n");

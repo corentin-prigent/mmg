@@ -241,3 +241,17 @@ IF ( BUILD_TESTING )
   ENDIF ( MMG3D_CI )
 
 ENDIF ( BUILD_TESTING )
+
+# ###############################################################################
+# #####         EGADSlite link
+# ###############################################################################
+# IF(USE_EGADSLITE)
+#   TARGET_LINK_LIBRARIES(${PROJECT_NAME}3d PRIVATE ${EGADS_LIBRARIES})
+#   IF ( LIBMMG3D_STATIC )
+#     TARGET_LINK_LIBRARIES(lib${PROJECT_NAME}3d_a PRIVATE ${EGADS_LIBRARIES})
+#   ENDIF()
+#   IF ( LIBMMG3D_SHARED )
+#     TARGET_LINK_LIBRARIES(lib${PROJECT_NAME}3d_so PRIVATE ${EGADS_LIBRARIES})
+#   ENDIF()
+#   MESSAGE(STATUS "MMG3D lie avec EGADSlite")
+# ENDIF()

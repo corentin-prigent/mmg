@@ -359,7 +359,7 @@ int MMG5_setdhd(MMG5_pMesh mesh) {
          */
         continue;
       }
-
+// Pas de MG_GEO ou MG_REF
       if ( mesh->info.anasurf ) {
         i1 = MMG5_inxt2[i];
         i2 = MMG5_iprv2[i];
@@ -429,7 +429,7 @@ int MMG5_setdhd(MMG5_pMesh mesh) {
          */
         continue;
       }
-
+// Pas de ridge
       if ( mesh->info.anasurf ) {
         i1 = MMG5_inxt2[i];
         i2 = MMG5_iprv2[i];

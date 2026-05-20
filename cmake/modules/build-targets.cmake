@@ -71,3 +71,17 @@ IF ( MmgTargetsExported )
     ${PROJECT_SOURCE_DIR}/cmake/modules/FindElas.cmake
     DESTINATION ${MMG_CMAKE_INSTALL_DIR} )
 ENDIF()
+
+# SET(EGADS_INC /home/eelleb/Desktop/ESP/EngSketchPad/src/EGADS/include)
+# SET(EGADS_LIB /home/eelleb/Desktop/test_egads/lib)
+
+# IF(EXISTS ${EGADS_INC}/egads.h)
+#   MESSAGE(STATUS "EGADSlite found : ${EGADS_LIB}")
+#   INCLUDE_DIRECTORIES(${EGADS_INC})
+#   SET(EGADS_LIBRARIES -L${EGADS_LIB} -legadslite -Wl,-rpath,${EGADS_LIB})
+#   SET(LIBRARIES ${LIBRARIES} ${EGADS_LIBRARIES})
+#   SET(USE_EGADSLITE ON)
+# ELSE()
+#   MESSAGE(STATUS "EGADSlite non trouve — mode analytique uniquement")
+#   SET(USE_EGADSLITE OFF)
+# ENDIF()
