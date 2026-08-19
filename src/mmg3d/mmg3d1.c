@@ -47,11 +47,11 @@ extern int8_t ddb;
  * \param mesh pointer to mesh
  * \param ppt pointer to point whose geom data have to be updated
  * \param tag point tag
- * \param nmref ref that has to be setted at point \a ppt if point is non-manifold
- * \param edgref ref that has to be setted at point \a ppt if point is manifold (edg ref)
- * \param no1 normal that has to be setted at point \a ppt (if needed)
- * \param no2 normal that has to be setted at point \a ppt (if needed)
- * \param to tangent that has to be setted at point \a ppt (if needed)
+ * \param nmref ref that has to be set at point \a ppt if point is non-manifold
+ * \param edgref ref that has to be set at point \a ppt if point is manifold (edg ref)
+ * \param no1 normal that has to be set at point \a ppt (if needed)
+ * \param no2 normal that has to be set at point \a ppt (if needed)
+ * \param to tangent that has to be set at point \a ppt (if needed)
  *
  * Set geometric info (ref, tag, normals and tangent) at point \a ppt.
  *
@@ -1890,8 +1890,8 @@ int8_t MMG3D_build_bezierEdge(MMG5_pMesh mesh,MMG5_int k,
  * \param p0 pointer to first extremity of edge \a ied (to fill)
  * \param p1 pointer to second extremity of edge \a ied (to fill)
  *
- * Search a face from wich we car reach edge \a ied. If a boundary face with
- * good orientation exists it is choosed prior to another face, otherwise, if
+ * Search a face from which we can reach edge \a ied. If a boundary face with
+ * good orientation exists it is chosen prior to another face, otherwise, if
  * possible, we choose a boundary face. Fill data needed to work on edge.
  *
  */
