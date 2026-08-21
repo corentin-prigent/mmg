@@ -84,7 +84,7 @@ inline double MMG5_lenedgCoor_iso(double *ca,double *cb,double *ma,double *mb) {
  * \return isotropic size at the point if success, FLT_MAX if fail.
  *
  * Define isotropic size at regular point nump, whose surfacic ball is provided
- * and update metric at 'regular' non-manifold points of the surfacic ball of
+ * and update metric at "regular" non-manifold points of the surfacic ball of
  * point.
  *
  */
