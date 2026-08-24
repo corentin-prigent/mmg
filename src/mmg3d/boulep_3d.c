@@ -602,7 +602,7 @@ int MMG5_boulernm(MMG5_pMesh mesh,MMG5_Hash *hash,MMG5_int start,int ip,MMG5_int
  *   - \a listv[k] = 4* tet index + index of point surfacic ball.
  *   - \a lists[k] = 4* tet index + index of boundary face.
  *
- * \warning Don't work for a non-manifold point if \a start has an adjacent
+ * \warning Does not work for a non-manifold point if \a start has an adjacent
  * through \a iface (for example : a non-manifold subdomain). Thus, if \a ip is
  * non-manifold, must be called only if \a start has no adjacent through iface.
  *
