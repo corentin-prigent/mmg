@@ -868,8 +868,8 @@ static int MMG5_defmetref(MMG5_pMesh mesh,MMG5_pSol met,MMG5_int kel, int iface,
  * in (tetra \a kel).
  * \return 1 if success, 0 otherwise.
  *
- * Define metric map at a REGULAR vertex of the mesh, associated to
- * the geometric approx of the surface.
+ * Define metric map at a REGULAR surface vertex of the mesh,
+ * associated to the geometric approx of the surface.
  *
  */
 static int MMG5_defmetreg(MMG5_pMesh mesh,MMG5_pSol met,MMG5_int kel,int iface, int ip) {

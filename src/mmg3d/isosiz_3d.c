@@ -1044,8 +1044,8 @@ int MMG3D_defsiz_iso(MMG5_pMesh mesh,MMG5_pSol met) {
 /**
  * \param mesh pointer to the mesh structure.
  *
- * Set the s field of the points that belongs to a required edge to 4*ne+3, set it to
- * 0 otherwise.
+ * Set field s of points that belong to a required edge to 4*ne+3.
+ * Set it to 0 otherwise.
  *
  */
 void MMG3D_mark_pointsOnReqEdge_fromTetra (  MMG5_pMesh mesh ) {
