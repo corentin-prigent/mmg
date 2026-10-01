@@ -90,6 +90,7 @@ extern "C" {
 #endif
 
 #include "mmg/common/libmmgtypes.h"
+#include "mmg/common/libmmgcommon.h"
 #include "mmg/mmg2d/mmg2d_export.h"
 
 /**

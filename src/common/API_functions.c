@@ -488,6 +488,53 @@ void MMG5_Set_constantSize(MMG5_pMesh mesh,MMG5_pSol met,double hsiz) {
   return;
 }
 
+int MMG5_Set_solSize(MMG5_pMesh mesh, MMG5_pSol sol, int typEntity, MMG5_int np, int typSol) {
+
+  if ( ( (mesh->info.imprim > 5) || mesh->info.ddebug ) && sol->m )
+    fprintf(stderr,"\n  ## Warning: %s: old solution deletion.\n",__func__);
+
+  if ( typEntity != MMG5_Vertex ) {
+    fprintf(stderr,"\n  ## Error: %s: mmg3d/mmgs require solution defined on vertices.\n",
+            __func__);
+    return 0;
+  }
+
+  sol->type = typSol;
+
+  if ( typSol == MMG5_Scalar ) {
+    sol->size = 1;
+  }
+  else if ( typSol == MMG5_Vector ) {
+    sol->size = 3;
+  }
+  else if ( typSol == MMG5_Tensor ) {
+    sol->size = 6;
+    /* User will provide its own metric: classical storage at ridges */
+    mesh->info.metRidTyp = 0;
+  }
+  else {
+    fprintf(stderr,"\n  ## Error: %s: type of solution not yet implemented.\n",
+            __func__);
+    return 0;
+  }
+
+  sol->dim = 3;
+
+  if ( np ) {
+    sol->np  = np;
+    sol->npi = np;
+    if ( sol->m )
+      MMG5_DEL_MEM(mesh,sol->m);
+
+    sol->npmax = mesh->npmax;
+    MMG5_ADD_MEM(mesh,(sol->size*(sol->npmax+1))*sizeof(double),"initial solution",
+                 fprintf(stderr,"  Exit program.\n");
+                 return 0);
+    MMG5_SAFE_CALLOC(sol->m,(sol->size*(sol->npmax+1)),double,return 0);
+  }
+  return 1;
+}
+
 int MMG5_Free_allSols(MMG5_pMesh mesh,MMG5_pSol *sol) {
   int i;
 

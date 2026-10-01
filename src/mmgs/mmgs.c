@@ -441,12 +441,12 @@ int main(int argc,char *argv[]) {
 
     /* read level-set in iso mode */
     if ( mesh->info.iso || mesh->info.isosurf ) {
-      if ( MMGS_loadSol(mesh,ls,ls->namein) < 1 ) {
+      if ( MMG5_loadSol(mesh,ls,ls->namein) < 1 ) {
         fprintf(stderr,"\n  ## ERROR: UNABLE TO LOAD LEVEL-SET.\n");
         MMGS_RETURN_AND_FREE(mesh,met,ls,MMG5_STRONGFAILURE);
       }
       if ( met->namein ) {
-        if ( MMGS_loadSol(mesh,met,met->namein) < 1 ) {
+        if ( MMG5_loadSol(mesh,met,met->namein) < 1 ) {
           fprintf(stdout,"  ## ERROR: UNABLE TO LOAD METRIC.\n");
           MMGS_RETURN_AND_FREE(mesh,met,ls,MMG5_STRONGFAILURE);
         }
@@ -459,7 +459,7 @@ int main(int argc,char *argv[]) {
     }
     else {
       /* read metric if any */
-      if ( MMGS_loadSol(mesh,met,met->namein) == -1 ) {
+      if ( MMG5_loadSol(mesh,met,met->namein) == -1 ) {
         fprintf(stderr,"\n  ## ERROR: WRONG DATA TYPE OR WRONG SOLUTION NUMBER.\n");
         MMGS_RETURN_AND_FREE(mesh,met,ls,MMG5_STRONGFAILURE);
       }

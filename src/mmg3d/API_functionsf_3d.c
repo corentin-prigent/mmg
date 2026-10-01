@@ -145,13 +145,13 @@ FORTRAN_NAME(MMG3D_SET_INPUTPARAMNAME, mmg3d_set_inputparamname,
 }
 
 /**
- * See \ref MMG3D_Set_solSize function in \ref mmg3d/libmmg3d.h file.
+ * See \ref MMG5_Set_solSize function in \ref mmg3d/libmmg3d.h file.
  */
-FORTRAN_NAME(MMG3D_SET_SOLSIZE,mmg3d_set_solsize,
+FORTRAN_NAME(MMG5_SET_SOLSIZE,mmg5_set_solsize,
              (MMG5_pMesh *mesh, MMG5_pSol *sol, int* typEntity,
               MMG5_int* np, int* typSol, int* retval),
              (mesh, sol, typEntity, np, typSol, retval)) {
-  *retval = MMG3D_Set_solSize(*mesh,*sol,*typEntity,*np,*typSol);
+  *retval = MMG5_Set_solSize(*mesh,*sol,*typEntity,*np,*typSol);
   return;
 }
 
@@ -1317,9 +1317,9 @@ FORTRAN_NAME(MMG3D_SAVEGENERICMESH,mmg3d_savegenericmesh,
 }
 
 /**
- * See \ref MMG3D_loadSol function in \ref mmg3d/libmmg3d.h file.
+ * See \ref MMG5_loadSol function in \ref mmg3d/libmmg3d.h file.
  */
-FORTRAN_NAME(MMG3D_LOADSOL,mmg3d_loadsol,
+FORTRAN_NAME(MMG5_LOADSOL,mmg5_loadsol,
              (MMG5_pMesh *mesh,MMG5_pSol *met,char* filename, int *strlen0,int* retval),
              (mesh,met,filename,strlen0,retval)){
   char *tmp = NULL;
@@ -1328,7 +1328,7 @@ FORTRAN_NAME(MMG3D_LOADSOL,mmg3d_loadsol,
   strncpy(tmp,filename,*strlen0);
   tmp[*strlen0] = '\0';
 
-  *retval = MMG3D_loadSol(*mesh,*met,tmp);
+  *retval = MMG5_loadSol(*mesh,*met,tmp);
 
   MMG5_SAFE_FREE(tmp);
 

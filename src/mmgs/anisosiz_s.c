@@ -761,7 +761,7 @@ int MMGS_defsiz_ani(MMG5_pMesh mesh,MMG5_pSol met) {
     MMG5_calelt     = MMG5_caltri_ani;
     MMG5_lenSurfEdg = MMG5_lenSurfEdg_ani;
 
-    if ( !MMGS_Set_solSize(mesh,met,MMG5_Vertex,mesh->np,3) )
+    if ( !MMG5_Set_solSize(mesh,met,MMG5_Vertex,mesh->np,3) )
       return 0;
   }
 

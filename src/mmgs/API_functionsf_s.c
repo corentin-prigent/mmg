@@ -145,13 +145,13 @@ FORTRAN_NAME(MMGS_SET_INPUTPARAMNAME, mmgs_set_inputparamname,
 }
 
 /**
- * See \ref MMGS_Set_solSize function in \ref mmgs/libmmgs.h file.
+ * See \ref MMG5_Set_solSize function in \ref mmgs/libmmgs.h file.
  */
-FORTRAN_NAME(MMGS_SET_SOLSIZE,mmgs_set_solsize,
+FORTRAN_NAME(MMG5_SET_SOLSIZE,mmg5_set_solsize,
              (MMG5_pMesh *mesh, MMG5_pSol *sol, int* typEntity,
               MMG5_int* np, int* typSol, int* retval),
              (mesh, sol, typEntity, np, typSol, retval)) {
-  *retval = MMGS_Set_solSize(*mesh,*sol,*typEntity,*np,*typSol);
+  *retval = MMG5_Set_solSize(*mesh,*sol,*typEntity,*np,*typSol);
   return;
 }
 
@@ -930,9 +930,9 @@ FORTRAN_NAME(MMGS_LOADMSHMESH_AND_ALLDATA,mmgs_loadmshmesh_and_alldata,
 }
 
 /**
- * See \ref MMGS_loadSol function in \ref mmgs/libmmgs.h file.
+ * See \ref MMG5_loadSol function in \ref mmgs/libmmgs.h file.
  */
-FORTRAN_NAME(MMGS_LOADSOL,mmgs_loadsol,
+FORTRAN_NAME(MMG5_LOADSOL,mmg5_loadsol,
              (MMG5_pMesh *mesh,MMG5_pSol *met,char* meshin, int *strlen0,int* retval),
              (mesh,met,meshin,strlen0,retval)){
 
@@ -942,7 +942,7 @@ FORTRAN_NAME(MMGS_LOADSOL,mmgs_loadsol,
   strncpy(tmp,meshin,*strlen0);
   tmp[*strlen0] = '\0';
 
-  *retval = MMGS_loadSol(*mesh,*met,tmp);
+  *retval = MMG5_loadSol(*mesh,*met,tmp);
 
  MMG5_SAFE_FREE(tmp);
 

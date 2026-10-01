@@ -91,6 +91,7 @@ extern "C" {
 
 #include "mmg/mmgs/mmgs_export.h"
 #include "mmg/common/libmmgtypes.h"
+#include "mmg/common/libmmgcommon.h"
 
 /**
  * Maximum array size when storing adjacent vertices (or ball) of a vertex.
@@ -317,7 +318,7 @@ LIBMMGS_EXPORT int  MMGS_Set_inputParamName(MMG5_pMesh mesh, const char* fparami
  * To use to initialize an array of solution fields (not used by Mmg itself).
  *
  * \remark Fortran interface:
- * >   SUBROUTINE MMGS_SET_SOLSIZE(mesh,sol,typEntity,np,typSol,retval)\n
+ * >   SUBROUTINE MMG5_SET_SOLSIZE(mesh,sol,typEntity,np,typSol,retval)\n
  * >     MMG5_DATA_PTR_T,INTENT(INOUT) :: mesh,sol\n
  * >     INTEGER, INTENT(IN)           :: typEntity,typSol\n
  * >     INTEGER(MMG5F_INT), INTENT(IN):: np\n
@@ -325,7 +326,6 @@ LIBMMGS_EXPORT int  MMGS_Set_inputParamName(MMG5_pMesh mesh, const char* fparami
  * >   END SUBROUTINE\n
  *
  */
- LIBMMGS_EXPORT int  MMGS_Set_solSize(MMG5_pMesh mesh, MMG5_pSol sol, int typEntity, MMG5_int np, int typSol);
 
 /**
  * \brief Initialize an array of solution fields defined at vertices: set
@@ -2046,7 +2046,7 @@ LIBMMGS_EXPORT int MMGS_saveVtuMesh(MMG5_pMesh mesh, MMG5_pSol sol, const char *
  * only 1 solution: the metric.
  *
  * \remark Fortran interface:
- * >   SUBROUTINE MMGS_LOADSOL(mesh,met,filename,strlen0,retval)\n
+ * >   SUBROUTINE MMG5_LOADSOL(mesh,met,filename,strlen0,retval)\n
  * >     MMG5_DATA_PTR_T, INTENT(INOUT) :: mesh,met\n
  * >     CHARACTER(LEN=*), INTENT(IN)   :: filename\n
  * >     INTEGER, INTENT(IN)            :: strlen0\n
@@ -2054,7 +2054,7 @@ LIBMMGS_EXPORT int MMGS_saveVtuMesh(MMG5_pMesh mesh, MMG5_pSol sol, const char *
  * >   END SUBROUTINE\n
  *
  */
-  LIBMMGS_EXPORT int  MMGS_loadSol(MMG5_pMesh mesh, MMG5_pSol met, const char* filename);
+  LIBMMGS_EXPORT int  MMG5_loadSol(MMG5_pMesh mesh, MMG5_pSol met, const char* filename);
 
 /**
  * \brief Load one or more solutions in a solution file in medit file format.

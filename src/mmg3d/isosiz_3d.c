@@ -693,7 +693,7 @@ int MMG3D_defsiz_iso(MMG5_pMesh mesh,MMG5_pSol met) {
     ismet = 0;
 
     /* Allocate and store the header informations for each solution */
-    if ( !MMG3D_Set_solSize(mesh,met,MMG5_Vertex,mesh->np,MMG5_Scalar) ) {
+    if ( !MMG5_Set_solSize(mesh,met,MMG5_Vertex,mesh->np,MMG5_Scalar) ) {
       return 0;
     }
   }

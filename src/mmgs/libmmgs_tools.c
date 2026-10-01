@@ -168,7 +168,7 @@ int MMGS_parsar(int argc,char *argv[],MMG5_pMesh mesh,MMG5_pSol met,MMG5_pSol so
         }
         break;
       case 'A': /* anisotropy */
-        if ( !MMGS_Set_solSize(mesh,met,MMG5_Vertex,0,MMG5_Tensor) )
+        if ( !MMG5_Set_solSize(mesh,met,MMG5_Vertex,0,MMG5_Tensor) )
           return 0;
         break;
       case 'f':
@@ -876,7 +876,7 @@ int MMGS_doSol_iso(MMG5_pMesh mesh,MMG5_pSol met) {
   }
 
   type = 1;
-  if ( !MMGS_Set_solSize(mesh,met,MMG5_Vertex,mesh->np,type) )
+  if ( !MMG5_Set_solSize(mesh,met,MMG5_Vertex,mesh->np,type) )
     return 0;
 
   /* Travel the triangles edges and add the edge contribution to edges
@@ -1346,7 +1346,7 @@ int MMGS_doSol_ani(MMG5_pMesh mesh,MMG5_pSol met) {
   }
 
   type = 3;
-  if ( !MMGS_Set_solSize(mesh,met,MMG5_Vertex,mesh->np,type) ) {
+  if ( !MMG5_Set_solSize(mesh,met,MMG5_Vertex,mesh->np,type) ) {
     fprintf(stderr,"\n  ## Error: %s: unable to allocate metric.\n",
             __func__);
     return 0;
@@ -1591,7 +1591,7 @@ int MMGS_Set_constantSize(MMG5_pMesh mesh,MMG5_pSol met) {
   }
 
   /* Memory alloc */
-  if ( !MMGS_Set_solSize(mesh,met,MMG5_Vertex,mesh->np,type) )
+  if ( !MMG5_Set_solSize(mesh,met,MMG5_Vertex,mesh->np,type) )
     return 0;
 
   if ( !MMG5_Compute_constantSize(mesh,met,&hsiz) )

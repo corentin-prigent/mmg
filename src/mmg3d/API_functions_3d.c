@@ -113,51 +113,6 @@ void MMG3D_Init_parameters(MMG5_pMesh mesh) {
 #endif
 }
 
-int MMG3D_Set_solSize(MMG5_pMesh mesh, MMG5_pSol sol, int typEntity, MMG5_int np, int typSol) {
-
-  if ( ( (mesh->info.imprim > 5) || mesh->info.ddebug ) && sol->m )
-    fprintf(stderr,"\n  ## Warning: %s: old solution deletion.\n",__func__);
-
-  if ( typEntity != MMG5_Vertex ) {
-    fprintf(stderr,"\n  ## Error: %s: mmg3d need a solution imposed on vertices.\n",
-            __func__);
-    return 0;
-  }
-
-  sol->type = typSol;
-
-  if ( typSol == MMG5_Scalar ) {
-    sol->size = 1;
-  }
-  else if ( typSol == MMG5_Vector ) {
-    sol->size = 3;
-  }
-  else if ( typSol == MMG5_Tensor ) {
-    sol->size = 6;
-    /* User will provide its own metric: classical storage at ridges */
-    mesh->info.metRidTyp = 0;
-  }
-  else {
-    fprintf(stderr,"\n  ## Error: %s: type of solution not yet implemented.\n",
-            __func__);
-    return 0;
-  }
-
-  sol->dim = 3;
-  if ( np ) {
-    sol->np  = np;
-    sol->npi = np;
-    if ( sol->m )
-      MMG5_DEL_MEM(mesh,sol->m);
-
-    sol->npmax = mesh->npmax;
-    MMG5_ADD_MEM(mesh,(sol->size*(sol->npmax+1))*sizeof(double),"initial solution",
-                  return 0);
-    MMG5_SAFE_CALLOC(sol->m,(sol->size*(sol->npmax+1)),double,return 0);
-  }
-  return 1;
-}
-
 int MMG3D_Set_solsAtVerticesSize(MMG5_pMesh mesh, MMG5_pSol *sol,int nsols,
                                  MMG5_int nentities, int *typSol) {
   MMG5_pSol psl;
@@ -194,7 +149,7 @@ int MMG3D_Set_solsAtVerticesSize(MMG5_pMesh mesh, MMG5_pSol *sol,int nsols,
       return 0;
     }
 
-    if ( !MMG3D_Set_solSize(mesh,psl,MMG5_Vertex,mesh->np,typSol[j]) ) {
+    if ( !MMG5_Set_solSize(mesh,psl,MMG5_Vertex,mesh->np,typSol[j]) ) {
       fprintf(stderr,"\n  ## Error: %s: unable to set the size of the"
               " solution num %d.\n",__func__,j);
       return 0;
@@ -1436,7 +1391,7 @@ int MMG3D_Set_scalarSol(MMG5_pSol met, double s, MMG5_int pos) {
   if ( !met->np ) {
     fprintf(stderr,"\n  ## Error: %s: You must set the number of"
             " solution with the",__func__);
-    fprintf(stderr," MMG3D_Set_solSize function before setting values");
+    fprintf(stderr," MMG5_Set_solSize function before setting values");
     fprintf(stderr," in solution structure \n");
     return 0;
   }
@@ -1501,7 +1456,7 @@ int MMG3D_Set_scalarSols(MMG5_pSol met, double *s ) {
   if ( !met->np ) {
     fprintf(stderr,"\n  ## Error: %s: You must set the number of solution"
             " with the",__func__);
-    fprintf(stderr," MMG3D_Set_solSize function before setting values");
+    fprintf(stderr," MMG5_Set_solSize function before setting values");
     fprintf(stderr," in solution structure \n");
     return 0;
   }
@@ -1526,7 +1481,7 @@ int MMG3D_Set_vectorSol(MMG5_pSol met, double vx,double vy, double vz, MMG5_int 
   if ( !met->np ) {
     fprintf(stderr,"\n  ## Error: %s: You must set the number of solution"
             " with the",__func__);
-    fprintf(stderr," MMG3D_Set_solSize function before setting values");
+    fprintf(stderr," MMG5_Set_solSize function before setting values");
     fprintf(stderr," in solution structure \n");
     return 0;
   }
@@ -1597,7 +1552,7 @@ int MMG3D_Set_vectorSols(MMG5_pSol met, double *sols) {
   if ( !met->np ) {
     fprintf(stderr,"\n  ## Error: %s: You must set the number of solution"
             " with the",__func__);
-    fprintf(stderr," MMG3D_Set_solSize function before setting values");
+    fprintf(stderr," MMG5_Set_solSize function before setting values");
     fprintf(stderr," in solution structure \n");
     return 0;
   }
@@ -1634,7 +1589,7 @@ int MMG3D_Set_tensorSol(MMG5_pSol met, double m11,double m12, double m13,
   if ( !met->np ) {
     fprintf(stderr,"\n  ## Error: %s: You must set the number of solution"
             " with the",__func__);
-    fprintf(stderr," MMG3D_Set_solSize function before setting values");
+    fprintf(stderr," MMG5_Set_solSize function before setting values");
     fprintf(stderr," in solution structure \n");
     return 0;
   }
@@ -1713,7 +1668,7 @@ int MMG3D_Set_tensorSols(MMG5_pSol met, double *sols) {
   if ( !met->np ) {
     fprintf(stderr,"\n  ## Error: %s: You must set the number of"
             " solution with the",__func__);
-    fprintf(stderr," MMG3D_Set_solSize function before setting values");
+    fprintf(stderr," MMG5_Set_solSize function before setting values");
     fprintf(stderr," in solution structure \n");
     return 0;
   }
@@ -1892,9 +1847,9 @@ int MMG3D_Chk_meshData(MMG5_pMesh mesh,MMG5_pSol met) {
   }
 
   if ( met->npi != met->np ) {
-    fprintf(stderr,"\n  ## Error: %s: if you don't use the MMG3D_loadSol"
+    fprintf(stderr,"\n  ## Error: %s: if you don't use the MMG5_loadSol"
             " function,",__func__);
-    fprintf(stderr," you must call the MMG3D_Set_solSize function to have a");
+    fprintf(stderr," you must call the MMG5_Set_solSize function to have a");
     fprintf(stderr," valid solution.\n");
     fprintf(stderr," Missing datas.\n");
     return 0;

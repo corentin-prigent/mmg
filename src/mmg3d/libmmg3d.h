@@ -122,6 +122,7 @@ extern "C" {
 #endif
 
 #include "mmg/common/libmmgtypes.h"
+#include "mmg/common/libmmgcommon.h"
 #include "mmg/mmg3d/mmg3d_export.h"
 
 /**
@@ -375,7 +376,7 @@ LIBMMG3D_EXPORT int  MMG3D_Set_inputParamName(MMG5_pMesh mesh, const char* fpara
  * To use to initialize a metric, a level-set or a displacement field.
  *
  * \remark Fortran interface:
- * >   SUBROUTINE MMG3D_SET_SOLSIZE(mesh,sol,typEntity,np,typSol,retval)\n
+ * >   SUBROUTINE MMG5_SET_SOLSIZE(mesh,sol,typEntity,np,typSol,retval)\n
  * >     MMG5_DATA_PTR_T,INTENT(INOUT) :: mesh,sol\n
  * >     INTEGER(MMG5F_INT), INTENT(IN):: np\n
  * >     INTEGER, INTENT(IN)           :: typEntity,typSol\n
@@ -383,8 +384,6 @@ LIBMMG3D_EXPORT int  MMG3D_Set_inputParamName(MMG5_pMesh mesh, const char* fpara
  * >   END SUBROUTINE\n
  *
  */
-  LIBMMG3D_EXPORT int  MMG3D_Set_solSize(MMG5_pMesh mesh, MMG5_pSol sol, int typEntity,
-                         MMG5_int np, int typSol);
 
 /**
  * \brief Initialize an array of solution values defined at vertices
@@ -2695,7 +2694,7 @@ LIBMMG3D_EXPORT int MMG3D_loadVtuMesh_and_allData(MMG5_pMesh mesh,MMG5_pSol *sol
  * metric
  *
  * \remark Fortran interface:
- * >   SUBROUTINE MMG3D_LOADSOL(mesh,met,filename,strlen0,retval)\n
+ * >   SUBROUTINE MMG5_LOADSOL(mesh,met,filename,strlen0,retval)\n
  * >     MMG5_DATA_PTR_T, INTENT(INOUT) :: mesh,met\n
  * >     CHARACTER(LEN=*), INTENT(IN)   :: filename\n
  * >     INTEGER, INTENT(IN)            :: strlen0\n
@@ -2703,7 +2702,7 @@ LIBMMG3D_EXPORT int MMG3D_loadVtuMesh_and_allData(MMG5_pMesh mesh,MMG5_pSol *sol
  * >   END SUBROUTINE\n
  *
  */
-  LIBMMG3D_EXPORT int MMG3D_loadSol(MMG5_pMesh mesh,MMG5_pSol met, const char *filename);
+  LIBMMG3D_EXPORT int MMG5_loadSol(MMG5_pMesh mesh,MMG5_pSol met, const char *filename);
 
 /**
  * \brief Load one or more solutions in a solution file in medit file format.

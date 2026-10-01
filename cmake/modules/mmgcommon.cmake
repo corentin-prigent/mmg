@@ -47,6 +47,7 @@ SET(MMGCOMMON_INCLUDE         ${PROJECT_BINARY_DIR}/include/${MMGCOMMON_SHRT_INC
 SET( mmgcommon_headers
   ${MMGCOMMON_SOURCE_DIR}/mmg_export.h
   ${MMGCOMMON_SOURCE_DIR}/libmmgtypes.h
+  ${MMGCOMMON_SOURCE_DIR}/libmmgcommon.h
   ${MMGCOMMON_BINARY_DIR}/mmgcmakedefines.h
   ${MMGCOMMON_BINARY_DIR}/mmgcmakedefinesf.h
   ${MMGCOMMON_BINARY_DIR}/mmgversion.h

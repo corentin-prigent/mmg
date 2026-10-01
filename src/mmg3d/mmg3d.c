@@ -343,7 +343,7 @@ int main(int argc,char *argv[]) {
 
 
   /* Set default metric size */
-  if ( !MMG3D_Set_solSize(mesh,met,MMG5_Vertex,0,MMG5_Scalar) )
+  if ( !MMG5_Set_solSize(mesh,met,MMG5_Vertex,0,MMG5_Scalar) )
     MMG5_RETURN_AND_FREE(mesh,met,ls,disp,MMG5_STRONGFAILURE);
 
   /* Read command line */
@@ -397,14 +397,14 @@ int main(int argc,char *argv[]) {
 
     if ( mesh->info.lag >= 0 || mesh->info.iso || mesh->info.isosurf ) {
       /* displacement or isovalue are mandatory */
-      if ( MMG3D_loadSol(mesh,sol,sol->namein) < 1 ) {
+      if ( MMG5_loadSol(mesh,sol,sol->namein) < 1 ) {
         fprintf(stdout,"  ## ERROR: UNABLE TO LOAD SOLUTION FILE.\n");
         MMG5_RETURN_AND_FREE(mesh,met,ls,disp,MMG5_STRONGFAILURE);
       }
     }
     else {
       /* Facultative metric */
-      if ( MMG3D_loadSol(mesh,met,met->namein) == -1 ) {
+      if ( MMG5_loadSol(mesh,met,met->namein) == -1 ) {
         fprintf(stderr,"\n  ## ERROR: WRONG DATA TYPE OR WRONG SOLUTION NUMBER.\n");
         MMG5_RETURN_AND_FREE(mesh,met,ls,disp,MMG5_STRONGFAILURE);
       }
@@ -413,7 +413,7 @@ int main(int argc,char *argv[]) {
     /* In iso mode: read metric if any */
     if ( mesh->info.iso ) {
       if (met->namein) {
-        if ( MMG3D_loadSol(mesh,met,met->namein) < 1 ) {
+        if ( MMG5_loadSol(mesh,met,met->namein) < 1 ) {
           fprintf(stdout,"  ## ERROR: UNABLE TO LOAD METRIC.\n");
           MMG5_RETURN_AND_FREE(mesh,met,ls,disp,MMG5_STRONGFAILURE);
         }

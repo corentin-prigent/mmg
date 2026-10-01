@@ -144,6 +144,9 @@ IF ( LIBMMG_STATIC OR LIBMMG_SHARED )
   FILE(INSTALL  ${mmg_headers}
     DESTINATION ${PROJECT_BINARY_DIR}/include/mmg/
     PATTERN "libmmg*f.h"  EXCLUDE)
+  FILE(INSTALL  ${PROJECT_SOURCE_DIR}/src/common/libmmgcommon.h
+    DESTINATION ${PROJECT_BINARY_DIR}/include/mmg/common/
+    PATTERN "libmmg*f.h"  EXCLUDE)
 
   set ( mmg_file_list ${PROJECT_BINARY_DIR}/include/mmg/libmmg.h )
   IF ( PERL_FOUND )

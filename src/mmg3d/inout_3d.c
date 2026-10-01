@@ -1242,7 +1242,7 @@ int MMG3D_loadGenericMesh(MMG5_pMesh mesh, MMG5_pSol met, MMG5_pSol sol, const c
       MMG5_SAFE_MALLOC(soltmp,strlen(solnameptr)+1,char,return -1);
       strcpy(soltmp,solnameptr);
 
-      if ( MMG3D_loadSol(mesh,sol,soltmp) == -1) {
+      if ( MMG5_loadSol(mesh,sol,soltmp) == -1) {
         fprintf(stderr,"\n  ## ERROR: WRONG DATA TYPE OR WRONG SOLUTION NUMBER.\n");
         ier = 0;
       }
@@ -2140,79 +2140,6 @@ int MMG3D_saveMshMesh_and_allData(MMG5_pMesh mesh,MMG5_pSol *sol,const char *fil
   return MMG5_saveMshMesh(mesh,sol,filename,0);
 }
 
-int MMG3D_loadSol(MMG5_pMesh mesh,MMG5_pSol met, const char *filename) {
-  FILE       *inm;
-  long       posnp;
-  int        iswp,ier,ver,bin,*type,nsols,dim;
-  MMG5_int   k,np;
-
-  /** Read the file header */
-  ier =  MMG5_loadSolHeader(filename,3,&inm,&ver,&bin,&iswp,&np,&dim,&nsols,
-                             &type,&posnp,mesh->info.imprim);
-  if ( ier < 1 ) return ier;
-
-  if ( nsols!=1 ) {
-    fprintf(stderr,"Error: SEVERAL SOLUTIONS FOUND (%d)\n",nsols);
-    fclose(inm);
-    MMG5_SAFE_FREE(type);
-    return -1;
-  }
-
-  if ( mesh->np != np ) {
-    fprintf(stderr,"  ** MISMATCHES DATA: THE NUMBER OF VERTICES IN "
-            "THE MESH (%" MMG5_PRId ") DIFFERS FROM THE NUMBER OF VERTICES IN "
-            "THE SOLUTION (%" MMG5_PRId ") \n",mesh->np,np);
-    fclose(inm);
-    MMG5_SAFE_FREE(type);
-    return -1;
-  }
-
-  /* #MMG5_loadSolHeader function reads only solution at vertices so we don't
-      have to check the entites on which the metric applies */
-  int entities = MMG5_Vertex;
-  ier = MMG5_chkMetricType(mesh,type,&entities,inm);
-
-  if ( ier < 1 ) {
-    MMG5_SAFE_FREE(type);
-    return ier;
-  }
-
-  /* Allocate and store the header information for each solution */
-  if ( !MMG3D_Set_solSize(mesh,met,MMG5_Vertex,mesh->np,type[0]) ) {
-    fclose(inm);
-    MMG5_SAFE_FREE(type);
-    return -1;
-  }
-  /* For binary files, we read the verson inside the file */
-  if ( ver ) met->ver = ver;
-
-  MMG5_SAFE_FREE(type);
-
-  /* Read mesh solutions */
-  rewind(inm);
-  fseek(inm,posnp,SEEK_SET);
-
-  if ( met->ver == 1 ) {
-    /* Single precision */
-    for (k=1; k<=mesh->np; k++) {
-      if ( MMG5_readFloatSol3D(met,inm,bin,iswp,k) < 0 ) return -1;
-    }
-  }
-  else {
-    /* Double precision */
-    for (k=1; k<=mesh->np; k++) {
-      if ( MMG5_readDoubleSol3D(met,inm,bin,iswp,k) < 0 ) return -1;
-    }
-  }
-
-  fclose(inm);
-
-  /* stats */
-  MMG5_printMetStats(mesh,met);
-
-  return 1;
-}
-
 int MMG3D_loadAllSols(MMG5_pMesh mesh,MMG5_pSol *sol, const char *filename) {
   MMG5_pSol   psl;
   FILE        *inm;
@@ -2270,7 +2197,7 @@ int MMG3D_loadAllSols(MMG5_pMesh mesh,MMG5_pSol *sol, const char *filename) {
     }
 
     /* Allocate and store the header informations for each solution */
-    if ( !MMG3D_Set_solSize(mesh,psl,MMG5_Vertex,mesh->np,type[j]) ) {
+    if ( !MMG5_Set_solSize(mesh,psl,MMG5_Vertex,mesh->np,type[j]) ) {
       MMG5_SAFE_FREE(type);
       fclose(inm);
       return -1;
