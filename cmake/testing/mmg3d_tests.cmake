@@ -51,13 +51,13 @@ SET ( input_files
   )
 
 SET ( args
-  ""
+  " "
   ### MultiDomain
-  " -hausd 0.002"
+  "-hausd 0.002"
   ### non-manifold
-  " -hmax 0.1"
-  ""
-  ""
+  "-hmax 0.1"
+  " "
+  " "
   #" -A"
   )
 
@@ -168,51 +168,51 @@ IF ( LONG_TESTS )
 
   SET ( args ${args}
     ### Cube
-    " -hmax 0.1 -hmin 0.1"
-    " -hmax 0.05 -hmin 0.05"
-    " -hmax 0.025 -hmin 0.025"
+    "-hmax 0.1 -hmin 0.1"
+    "-hmax 0.05 -hmin 0.05"
+    "-hmax 0.025 -hmin 0.025"
     ###
-    ""
-    ""
-    ""
-    ""
-    ""
+    " "
+    " "
+    " "
+    " "
+    " "
     ### Sphere
-    " -hausd 0.1"
-    " -hausd 0.1"
-    " -hausd 0.1"
-    " -hausd 0.1"
-    " -hausd 0.1"
+    "-hausd 0.1"
+    "-hausd 0.1"
+    "-hausd 0.1"
+    "-hausd 0.1"
+    "-hausd 0.1"
     # " -hausd 0.1"
     ""
     ###
-    " -hausd 0.1"
-    " -hausd 0.1"
-    " -hausd 0.1"
+    "-hausd 0.1"
+    "-hausd 0.1"
+    "-hausd 0.1"
     ###
-    " -hausd 0.001 -hgrad -1"
-    " -hausd 0.005 -hgrad -1"
+    "-hausd 0.001 -hgrad -1"
+    "-hausd 0.005 -hgrad -1"
     ### CubeSkin
-    ""
-    ""
-    ""
-    ""
+    " "
+    " "
+    " "
+    " "
     # ""
     # ""
     ### Linkrods
-    " -hausd 0.1"
-    " -hausd 0.01"
-    " -hausd 0.1"
-    " -hausd 0.01"
-    " -hausd 0.001"
+    "-hausd 0.1"
+    "-hausd 0.01"
+    "-hausd 0.1"
+    "-hausd 0.01"
+    "-hausd 0.001"
     ### Santa
-    " -hausd 0.001 -ar 90"
-    " -hausd 0.0001 -ar 90"
+    "-hausd 0.001 -ar 90"
+    "-hausd 0.0001 -ar 90"
     ### MultiDomain
-    " -hmax 0.02"
-    " -hausd 0.0003"
-    " -hmax 0.05"
-    ""
+    "-hmax 0.02"
+    "-hausd 0.0003"
+    "-hmax 0.05"
+    " "
     )
 
 ENDIF ( )
