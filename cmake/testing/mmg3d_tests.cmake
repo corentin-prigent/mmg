@@ -184,7 +184,7 @@ IF ( LONG_TESTS )
     "-hausd 0.1"
     "-hausd 0.1"
     # " -hausd 0.1"
-    ""
+    " "
     ###
     "-hausd 0.1"
     "-hausd 0.1"
