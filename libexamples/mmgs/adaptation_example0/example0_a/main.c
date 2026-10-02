@@ -98,11 +98,11 @@ int main(int argc,char *argv[]) {
   if ( MMGS_loadMesh(mmgMesh,filename) != 1 )  exit(EXIT_FAILURE);
 
   /** 3) Build sol in MMG5 format */
-  /** Two solutions: just use the MMGS_loadSol function that will read a .sol(b)
+  /** Two solutions: just use the MMG5_loadSol function that will read a .sol(b)
       file formatted or manually set your sol using the MMGS_Set* functions */
 
   /** With MMGS_loadSol function */
-  if ( MMGS_loadSol(mmgMesh,mmgSol,filename) != 1 )
+  if ( MMG5_loadSol(mmgMesh,mmgSol,filename) != 1 )
     exit(EXIT_FAILURE);
 
   /** 4) (not mandatory): check if the number of given entities match with mesh size */
