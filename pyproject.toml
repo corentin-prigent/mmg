@@ -1,19 +1,13 @@
 [build-system]
-requires      = ["py-build-cmake~=0.5.0"]
-build-backend = "py_build_cmake.build"
+requires = ["scikit-build-core>=0.12", "pybind11>=3"]
+build-backend = "scikit_build_core.build"
+
+[tool.scikit-build]
+minimum-version = "build-system.requires"
+build-dir = "build/{wheel_tag}"
 
 [project]
 name    = "mmg"
-version = "1.0"
+version = "5.8"
 
-[tool.py_build_cmake.module]
-name = "mmg"
-
-[tool.py-build_cmake.dist]
-include = ["CMakeLists.txt", "src/*/*.c"]
-
-[tool.py-build_cmake.cmake]
-minimum_version = "3.17"
-build_type      = "Release"
-build_args      = ["-j"]
 
