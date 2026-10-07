@@ -122,7 +122,7 @@ ENDIF()
 ############################################################################
 
 # Compile static library
-IF ( LIBMMG3D_STATIC )
+IF ( LIBMMG3D_STATIC AND NOT SKBUILD)
   ADD_AND_INSTALL_LIBRARY ( lib${PROJECT_NAME}3d_a STATIC copy_3d_headers
     "${mmg3d_library_files}" ${PROJECT_NAME}3d )
 ENDIF()
@@ -160,10 +160,14 @@ IF ( MMG_INSTALL_PRIVATE_HEADERS )
 ENDIF()
 
 # install man pages
-INSTALL(FILES ${PROJECT_SOURCE_DIR}/doc/man/mmg3d.1.gz DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
+if (NOT SKBUILD)
+  INSTALL(FILES ${PROJECT_SOURCE_DIR}/doc/man/mmg3d.1.gz DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
+endif()
 
 # Install header files in /usr/local or equivalent
-INSTALL(FILES ${mmg3d_headers} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/mmg/mmg3d COMPONENT headers)
+if (NOT SKBUILD)
+  INSTALL(FILES ${mmg3d_headers} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/mmg/mmg3d COMPONENT headers)
+endif()
 
 IF ( MMG_INSTALL_PRIVATE_HEADERS )
   COPY_1_HEADER_AND_CREATE_TARGET(
@@ -185,8 +189,10 @@ COPY_HEADERS_AND_CREATE_TARGET ( ${MMG3D_SOURCE_DIR} ${MMG3D_BINARY_DIR} ${MMG3D
 #####         Compile MMG3D executable
 #####
 ###############################################################################
-ADD_AND_INSTALL_EXECUTABLE ( ${PROJECT_NAME}3d copy_3d_headers
-  "${mmg3d_library_files}" "${mmg3d_main_file}" )
+if (NOT SKBUILD)
+  ADD_AND_INSTALL_EXECUTABLE ( ${PROJECT_NAME}3d copy_3d_headers
+    "${mmg3d_library_files}" "${mmg3d_main_file}" )
+endif()
 
 ###############################################################################
 #####

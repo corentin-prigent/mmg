@@ -75,7 +75,9 @@ IF (NOT WIN32 OR MINGW)
 ENDIF()
 
 # Install header files in /usr/local or equivalent
-INSTALL(FILES ${mmgcommon_headers} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/mmg/common COMPONENT headers)
+if (NOT SKBUILD)
+  INSTALL(FILES ${mmgcommon_headers} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/mmg/common COMPONENT headers)
+endif()
 
 # Copy header files in project directory at build step
 COPY_1_HEADER_AND_CREATE_TARGET(

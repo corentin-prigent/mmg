@@ -51,7 +51,7 @@ IF ( BUILD_MMG )
   INCLUDE(mmg)
 ENDIF ( )
 
-IF ( MmgTargetsExported )
+IF ( MmgTargetsExported AND NOT SKBUILD)
   set( MMG_CMAKE_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/mmg )
 
   configure_package_config_file(cmake/config/mmgConfig.cmake.in

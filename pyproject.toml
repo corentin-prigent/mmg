@@ -3,8 +3,10 @@ requires = ["scikit-build-core>=0.12", "pybind11>=3"]
 build-backend = "scikit_build_core.build"
 
 [tool.scikit-build]
-minimum-version = "build-system.requires"
-build-dir = "build/{wheel_tag}"
+minimum-version  = "build-system.requires"
+cmake.build-type = ["Release"]
+cmake.args       = ["-DBUILD_SHARED_LIBS=ON","-DMMG_PYTHON_API=ON",
+                    "-DBUILD=MMG"]
 
 [project]
 name    = "mmg"
