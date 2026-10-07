@@ -131,16 +131,20 @@ IF ( MMG_INSTALL_PRIVATE_HEADERS )
 ENDIF()
 
 # install man pages
-INSTALL(FILES ${PROJECT_SOURCE_DIR}/doc/man/mmg2d.1.gz DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
+if (NOT SKBUILD)
+  INSTALL(FILES ${PROJECT_SOURCE_DIR}/doc/man/mmg2d.1.gz DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
+endif()
 
 # Install header files in /usr/local or equivalent
-INSTALL(FILES ${mmg2d_headers} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/mmg/mmg2d COMPONENT headers )
+if (NOT SKBUILD)
+  INSTALL(FILES ${mmg2d_headers} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/mmg/mmg2d COMPONENT headers )
+endif()
 
 # Copy header files in project directory at build step
 COPY_HEADERS_AND_CREATE_TARGET ( ${MMG2D_SOURCE_DIR} ${MMG2D_BINARY_DIR} ${MMG2D_INCLUDE} 2d )
 
 # Compile static library
-IF ( LIBMMG2D_STATIC )
+IF ( LIBMMG2D_STATIC AND NOT SKBUILD)
   ADD_AND_INSTALL_LIBRARY ( lib${PROJECT_NAME}2d_a STATIC copy_2d_headers
     "${mmg2d_library_files}" ${PROJECT_NAME}2d )
 ENDIF()
@@ -157,9 +161,10 @@ ENDIF()
 #####
 ###############################################################################
 
-ADD_AND_INSTALL_EXECUTABLE ( ${PROJECT_NAME}2d copy_2d_headers
-  "${mmg2d_library_files}" "${mmg2d_main_file}" )
-
+if (NOT SKBUILD)
+  ADD_AND_INSTALL_EXECUTABLE ( ${PROJECT_NAME}2d copy_2d_headers
+    "${mmg2d_library_files}" "${mmg2d_main_file}" )
+endif()
 
 ###############################################################################
 #####

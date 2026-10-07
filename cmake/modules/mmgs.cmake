@@ -87,7 +87,7 @@ FILE(
 ############################################################################
 
 # Compile static library
-IF ( LIBMMGS_STATIC )
+IF ( LIBMMGS_STATIC AND NOT SKBUILD)
   ADD_AND_INSTALL_LIBRARY ( lib${PROJECT_NAME}s_a STATIC copy_s_headers
     "${mmgs_library_files}" ${PROJECT_NAME}s )
 ENDIF()
@@ -123,10 +123,14 @@ IF ( MMG_INSTALL_PRIVATE_HEADERS )
 ENDIF()
 
 # install man pages
-INSTALL(FILES ${PROJECT_SOURCE_DIR}/doc/man/mmgs.1.gz DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
+if (NOT SKBUILD)
+  INSTALL(FILES ${PROJECT_SOURCE_DIR}/doc/man/mmgs.1.gz DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
+endif()
 
 # Install header files in /usr/local or equivalent
-INSTALL(FILES ${mmgs_headers} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/mmg/mmgs COMPONENT headers)
+if (NOT SKBUILD)
+  INSTALL(FILES ${mmgs_headers} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/mmg/mmgs COMPONENT headers)
+endif()
 
 # Copy header files in project directory at build step
 COPY_HEADERS_AND_CREATE_TARGET ( ${MMGS_SOURCE_DIR} ${MMGS_BINARY_DIR} ${MMGS_INCLUDE} s )
@@ -136,8 +140,10 @@ COPY_HEADERS_AND_CREATE_TARGET ( ${MMGS_SOURCE_DIR} ${MMGS_BINARY_DIR} ${MMGS_IN
 #####         Compile MMGS executable
 #####
 ###############################################################################
-ADD_AND_INSTALL_EXECUTABLE ( ${PROJECT_NAME}s copy_s_headers
-  "${mmgs_library_files}" "${mmgs_main_file}" )
+if (NOT SKBUILD)
+  ADD_AND_INSTALL_EXECUTABLE ( ${PROJECT_NAME}s copy_s_headers
+    "${mmgs_library_files}" "${mmgs_main_file}" )
+endif()
 
 ###############################################################################
 #####
