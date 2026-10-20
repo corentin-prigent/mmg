@@ -1369,6 +1369,8 @@ LIBMMG3D_EXPORT int  MMG3D_Set_inputParamName(MMG5_pMesh mesh, const char* fpara
  */
  LIBMMG3D_EXPORT int MMG3D_Chk_meshData(MMG5_pMesh mesh, MMG5_pSol met);
 
+ LIBMMG3D_EXPORT int MMG3D_rearrange_ridge_metric(MMG5_pMesh, MMG5_pSol);
+
 /* functions to set parameters
  *
  * NOTE iparam and dparam are int rather than enum MMG3D_Param because

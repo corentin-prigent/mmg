@@ -1925,6 +1925,30 @@ int MMG3D_Chk_meshData(MMG5_pMesh mesh,MMG5_pSol met) {
   return 1;
 }
 
+int MMG3D_rearrange_ridge_metric(MMG5_pMesh mesh,MMG5_pSol met) {
+  double dbuf[6],tmp;
+
+  if ( !mesh->info.metRidTyp ) {
+    fprintf(stdout," Metric already in standard format. Nothing to do.\n");
+    return 1;
+  }
+
+  for ( int k=1; k<=mesh->np; k++ ) {
+    MMG5_build3DMetric(mesh,met,k,dbuf);
+
+    tmp     = dbuf[2];
+    dbuf[2] = dbuf[3];
+    dbuf[3] = tmp;
+
+    for ( int i=0; i<6; i++ ) {
+      met->m[6*k+i] = dbuf[i];
+    }
+  }
+
+  mesh->info.metRidTyp = 0;
+  return 1;
+}
+
 static inline
 int MMG3D_skipIso(MMG5_pMesh mesh) {
   MMG5_pTria  ptt,ptt1;
