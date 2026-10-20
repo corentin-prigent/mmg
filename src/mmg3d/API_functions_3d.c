@@ -1936,10 +1936,6 @@ int MMG3D_rearrange_ridge_metric(MMG5_pMesh mesh,MMG5_pSol met) {
   for ( int k=1; k<=mesh->np; k++ ) {
     MMG5_build3DMetric(mesh,met,k,dbuf);
 
-    tmp     = dbuf[2];
-    dbuf[2] = dbuf[3];
-    dbuf[3] = tmp;
-
     for ( int i=0; i<6; i++ ) {
       met->m[6*k+i] = dbuf[i];
     }
