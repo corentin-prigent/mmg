@@ -1766,12 +1766,12 @@ void MMG5_grad2metVol_setmet(MMG5_pMesh mesh,MMG5_pSol met,int ip,double *m,int8
  * \param np2 global index of the second edge extremity.
  *
  * \return -1 on failure, else local indices of graded point on the edge
- * (bitwise encoded, so 0 for no update, 1 if the first point iis updated, 2 if
+ * (bitwise encoded, so 0 for no update, 1 if the first point is updated, 2 if
  * the second one is updated, 3 if both). Use the third bit to switch on warning
  * information at output.
  *
  * Enforces gradation of metric in both extremities of an edge with respect to
- * one other.
+ * one another.
  *
  */
 static inline
