@@ -921,7 +921,8 @@ char *MMG5_Get_filenameExt( char *filename ) {
 
   if ( (!dot) || dot == filename || (lastpath>dot) || (!strcmp(dot,".o")) ) {
     /* No extension */
-    return filename + strlen(filename);
+    //return filename + strlen(filename);
+    return NULL;
   }
 
   return dot;
