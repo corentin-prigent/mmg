@@ -815,7 +815,7 @@ const char* MMG5_Get_tagName(uint16_t tag)
  */
 int MMG5_Get_format( char *ptr, int fmt ) {
 
-  if ( !ptr ) return fmt;
+  if ( !*ptr ) return fmt;
 
   if ( !strncmp ( ptr,".meshb",strlen(".meshb") ) ) {
     return MMG5_FMT_MeditBinary;
@@ -917,12 +917,11 @@ char *MMG5_Get_filenameExt( char *filename ) {
   }
 
   dot = strrchr(filename, '.');
-  lastpath = (pathsep == 0) ? NULL : strrchr (filename, pathsep);
+  lastpath = strrchr(filename, pathsep);
 
   if ( (!dot) || dot == filename || (lastpath>dot) || (!strcmp(dot,".o")) ) {
     /* No extension */
-    //return filename + strlen(filename);
-    return NULL;
+    return filename + strlen(filename);
   }
 
   return dot;
