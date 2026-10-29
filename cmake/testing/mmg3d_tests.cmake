@@ -137,17 +137,17 @@ IF ( LONG_TESTS )
     # ${MMG3D_CI_TESTS}/SphereIso_0.020-0.015_met/SphereIso0.020
     ${MMG3D_CI_TESTS}/SphereAni_0.02/sphere
     ###
-    ${MMG3D_CI_TESTS}/SphereIso_2smallh_met/SphereIso0.0625
-    ${MMG3D_CI_TESTS}/SphereIso_4smallh_met/SphereIso0.0625
-    ${MMG3D_CI_TESTS}/SphereIso_8smallh_met/SphereIso0.0625
+    ${MMG3D_CI_TESTS}/SphereIso_2smallh_met/SphereIso0.0625.meshb
+    ${MMG3D_CI_TESTS}/SphereIso_4smallh_met/SphereIso0.0625.meshb
+    ${MMG3D_CI_TESTS}/SphereIso_8smallh_met/SphereIso0.0625.meshb
     ###
-    ${MMG3D_CI_TESTS}/SphereIso_h_hausd0.001/SphereIso0.5
-    ${MMG3D_CI_TESTS}/SphereIso_h_hausd0.005/SphereIso0.5
+    ${MMG3D_CI_TESTS}/SphereIso_h_hausd0.001/SphereIso0.5.meshb
+    ${MMG3D_CI_TESTS}/SphereIso_h_hausd0.005/SphereIso0.5.meshb
     ### CubeSkin
-    ${MMG3D_CI_TESTS}/CubeSkin0.05_Inside0.4/CubeSkin0.05
-    ${MMG3D_CI_TESTS}/CubeSkin0.1_Inside0.4/CubeSkin0.1
-    ${MMG3D_CI_TESTS}/CubeSkin0.2_Inside0.4/CubeSkin0.2
-    ${MMG3D_CI_TESTS}/CubeSkin0.0125_Inside0.125/CubeSkin0.125
+    ${MMG3D_CI_TESTS}/CubeSkin0.05_Inside0.4/CubeSkin0.05.meshb
+    ${MMG3D_CI_TESTS}/CubeSkin0.1_Inside0.4/CubeSkin0.1.meshb
+    ${MMG3D_CI_TESTS}/CubeSkin0.2_Inside0.4/CubeSkin0.2.meshb
+    ${MMG3D_CI_TESTS}/CubeSkin0.0125_Inside0.125/CubeSkin0.125.meshb
     # ${MMG3D_CI_TESTS}/CubeSkin0.0125_Inside0.25/CubeSkin0.25
     # ${MMG3D_CI_TESTS}/CubeSkin0.0125_Inside0.5/CubeSkin0.5
     ### Linkrods
