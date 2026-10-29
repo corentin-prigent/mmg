@@ -1926,7 +1926,7 @@ int MMG3D_Chk_meshData(MMG5_pMesh mesh,MMG5_pSol met) {
 }
 
 int MMG3D_rearrange_ridge_metric(MMG5_pMesh mesh,MMG5_pSol met) {
-  double dbuf[6],tmp;
+  double dbuf[6];
 
   if ( !mesh->info.metRidTyp ) {
     fprintf(stdout," Metric already in standard format. Nothing to do.\n");
