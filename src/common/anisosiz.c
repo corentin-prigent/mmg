@@ -1940,12 +1940,12 @@ int MMG5_updatemetreq_ani(double *n,double dn[2],double vp[2][2]) {
  *
  * \return 0 if no gradation is needed, 1 otherwise.
  *
- * Enforces gradation of metric of the extremity ±a npslave of edge \$f[
- * npmaster; npslave]\$f in tria \a pt with respect to the other, along the
- * direction of the associated support curve first, then along the normal
- * direction.
+ * Enforces gradation of metric of the extremity \a npslave of edge \$f[
+ * \text{npmaster}, \text{npslave}]\$f in tria \a pt with respect to the other,
+ * along the direction of the associated support curve first, then along the
+ * normal direction.
  *
- * \warning The gradation along the direction normal to the surface is made in
+ * Gradation along the direction normal to the surface is made in
  * an "isotropic way".
  *
  */
