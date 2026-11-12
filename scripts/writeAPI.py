@@ -58,7 +58,7 @@ class pythonAPI:
 
     def writeAPI(self):
         def writeClass(f, cl):
-            f.write("class " + cl.name + "(ctypes.Structure):\n")
+            f.write("class " + cl.name + "(Structure):\n")
             indentcl = "    "
             indentfl = 4*indentcl
             f.write(indentcl + "_fields_ = [")
@@ -100,30 +100,17 @@ class pythonAPI:
                 elif (a.pointer == 3):
                     continue
                 else:
-                    def_line += a.name + ": " + a.type + ","
+                    def_line += a.name + ","
             def_line += "):\n"
             def_line = def_line.replace(",)",")")
             f.write(def_line)
-            #f.write("def " + fn.name + "(")
-            #for a in fn.args:
-            #    if ((a == "str") or (a.pointer == 2)):
-            #        if (not (a == fn.args[-1])):
-            #            f.write(a.name + ",")
-            #        else:
-            #            f.write(a.name)
-            #    elif (a.pointer == 3):
-            #        continue
-            #    else:
-            #        if (not (a == fn.args[-1])):
-            #            f.write(a.name + ": " + a.type + ",")
-            #        else:
-            #            f.write(a.name + ": " + a.type)
-            #f.write("):\n")
-            f.write(indentfn)
             if (fn.str_encode):
-                f.write("if (isinstance(name,str)):\n")
-                f.write(indentfn + indentfn + "name = ctypes.c_char_p(name.encode('utf-8'))\n")
-                f.write(indentfn)
+                f.write(indentfn + "if (isinstance(name,str)):\n")
+                f.write(indentfn + indentfn + "name = c_char_p(name.encode('utf-8'))\n")
+            for a in fn.args:
+                if (a.pointer == 3):
+                    f.write(indentfn + a.name + " = " + a.type + "()\n")
+            f.write(indentfn)
             if (not (fn.return_type == "None")):
                 f.write("ier")
             #for a in fn.args:
@@ -134,28 +121,21 @@ class pythonAPI:
             f.write("lib" + fn.dim + fn.name + "(")
             arg_line = ""
             for a in fn.args:
-                #if (a.pointer == 3):
-                #    continue
-                if (a.pointer == 1):
-                    arg_line += "ctypes.byref(" + a.name + ")" + comma
-                    #f.write("ctypes.byref(" + a.name + ")" + comma)
-                elif (a.pointer == 2 or a.pointer == 3):
-                    arg_line += a.name + ".ctypes.data_as(ctypes.POINTER(" + a.type + "))" + comma
-                    #f.write(a.name + ".ctypes.data_as(ctypes.POINTER(" + a.type + "))" + comma)
+                if (a.pointer == 1 or a.pointer == 3):
+                    arg_line += "byref(" + a.name + ")" + comma
+                elif (a.pointer == 2):
+                    arg_line += a.name + ".ctypes.data_as(POINTER(" + a.type + "))" + comma
                 else:
-                    arg_line += a.name + comma
-                    #f.write(a.name + comma)
+                    arg_line += a.type + "(" + a.name + ")" + comma
             arg_line += ")"
             arg_line = arg_line.replace(",)",")")
-            #f.write(")")
             f.write(arg_line)
             f.write("\n")
             if (not (fn.return_type == "None")):
-                #f.write(indentfn + "return ier,")
                 return_line = indentfn + "return ier,"
                 for a in fn.args:
                     if (a.pointer == 3):
-                        return_line += " " + a.name + ","
+                        return_line += " " + a.name + ".value,"
                 return_line += "\n"
                 return_line = return_line.replace(",\n","\n")
                 f.write(return_line)
@@ -182,15 +162,15 @@ class pythonAPI:
                 writeFunction(f,fn)
 
 python_header = """\
-import ctypes
+from ctypes import *
 import os
 from enum import IntEnum
 
-lib2d = ctypes.CDLL("{libpath2d}")
-lib3d = ctypes.CDLL("{libpath3d}")
-libs  = ctypes.CDLL("{libpaths}")
+lib2d = CDLL("{libpath2d}")
+lib3d = CDLL("{libpath3d}")
+libs  = CDLL("{libpaths}")
 
-MMG5_int = "ctypes.c_int"
+MMG5_int = "c_int"
 
 MMG2D_LMAX = 1024
 

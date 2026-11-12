@@ -5,11 +5,11 @@ def setAPIFunctions(api : pythonAPI):
 
     type_dict = {
         "void"    : "None",
-        "int"     : "ctypes.c_int",
-        "int8_t"  : "ctypes.c_int8",
-        "double"  : "ctypes.c_double",
-        "MMG5_int": "ctypes.c_int",
-        "char*"   : "ctypes.c_char_p",
+        "int"     : "c_int",
+        "int8_t"  : "c_int8",
+        "double"  : "c_double",
+        "MMG5_int": "c_int",
+        "char*"   : "c_char_p",
         ""        : "",
         "str"     : "str"
     }
@@ -67,7 +67,6 @@ def setAPIFunctions(api : pythonAPI):
                             var_type = item_split[0+offset]
                             if (var_type != "void"):
                                 var_name = item_split[1+offset]
-                            #if ((var_type.find("_p") != -1) or (var_type.find("*") != -1) and (var_type.find("char") == -1)):
                             if ((var_type.find("_p") != -1) and (var_type.find("char") == -1)):
                                 ptr = 1
                                 var_type = var_type.replace("_p","_")
