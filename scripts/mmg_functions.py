@@ -113,13 +113,14 @@ def setAPIEnums(api : pythonAPI):
             if (line.find("enum") != -1 and line.find("*") == -1):
                 enum_start = 1
                 line_split = line.split()
-                name = line_split[1]
-                enum = mmgEnum(name)
+                name = line_split[1].split('_')
+                enum = mmgEnum(name[0])
                 continue
             if (enum_start and line.find(",") != -1):
                 line_split = line.split(",")
                 element = line_split[0].strip(" \n,")
-                enum.addElement(element)
+                element = element.split("_",1)
+                enum.addElement(element[1])
             if (enum_start and line.find(";") != -1):
                 enum_start = 0
                 api.addEnum(enum)
