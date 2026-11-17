@@ -1,12 +1,13 @@
 import os
 
 class mmgFunction():
-    def __init__(self,name,rtype,args,encode,dim):
+    def __init__(self,name,rtype,args,encode,dim,ftype):
         self.name = name
         self.return_type = rtype
         self.args = args
         self.str_encode = encode
         self.dim = dim
+        self.ftype = ftype
 
 class arg():
     def __init__(self,arg_name,arg_type,arg_pointer=0):
@@ -95,9 +96,7 @@ class pythonAPI:
             def_line = ""
             def_line += "def " + fn.name + "("
             for a in fn.args:
-                if ((a == "str") or (a.pointer == 2)):
-                    def_line += a.name + ","
-                elif (a.pointer == 3):
+                if ((a.pointer == 2) and fn.ftype):
                     continue
                 else:
                     def_line += a.name + ","
@@ -108,20 +107,17 @@ class pythonAPI:
                 f.write(indentfn + "if (isinstance(name,str)):\n")
                 f.write(indentfn + indentfn + "name = c_char_p(name.encode('utf-8'))\n")
             for a in fn.args:
-                if (a.pointer == 3):
+                if (a.pointer == 2 and fn.ftype):
                     f.write(indentfn + a.name + " = " + a.type + "()\n")
             f.write(indentfn)
             if (not (fn.return_type == "None")):
                 f.write("ier")
-            #for a in fn.args:
-            #    if (a.pointer == 3):
-            #        f.write(", " + a.name)
             if (not (fn.return_type == "None")):
                 f.write(" = ")
             f.write("lib" + fn.dim + fn.name + "(")
             arg_line = ""
             for a in fn.args:
-                if (a.pointer == 1 or a.pointer == 3):
+                if (a.pointer == 1 or (a.pointer == 2 and fn.ftype)):
                     arg_line += "byref(" + a.name + ")" + comma
                 elif (a.pointer == 2):
                     arg_line += a.name + ".ctypes.data_as(POINTER(" + a.type + "))" + comma
@@ -134,7 +130,7 @@ class pythonAPI:
             if (not (fn.return_type == "None")):
                 return_line = indentfn + "return ier,"
                 for a in fn.args:
-                    if (a.pointer == 3):
+                    if (a.pointer == 2 and fn.ftype):
                         return_line += " " + a.name + ".value,"
                 return_line += "\n"
                 return_line = return_line.replace(",\n","\n")

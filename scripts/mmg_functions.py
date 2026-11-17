@@ -51,6 +51,9 @@ def setAPIFunctions(api : pythonAPI):
                         # prototype[1] : argument list (types and names)
                         str_encode = 0
                         name = prototype[0]
+                        ftype = 0
+                        if ((name.find("get") != -1) or (name.find("Get") != -1)):
+                            ftype = 1
                         restype = type_dict[line_split[1]]
                         arglist_str = prototype[1].strip(" ) \n;").split(",")
                         arglist = []
@@ -80,8 +83,8 @@ def setAPIFunctions(api : pythonAPI):
                                 ptr = 2
                                 var_type = var_type.replace("*","")
                                 var_name = var_name.replace("*","")
-                                if (var_name not in var_list):
-                                    ptr = 3
+                                #if (var_name not in var_list):
+                                #    ptr = 3
                             else:
                                 ptr = 0
                             if (var_type.find("MMG5_") == -1):
@@ -98,7 +101,7 @@ def setAPIFunctions(api : pythonAPI):
                                 var_name = var_name + "0"
                             arglist.append(arg(var_name,var_type,ptr))
 
-                        func = mmgFunction(name,restype,arglist,str_encode,dim)
+                        func = mmgFunction(name,restype,arglist,str_encode,dim,ftype)
                         api.addFunction(func)
 
 def setAPIEnums(api : pythonAPI):
