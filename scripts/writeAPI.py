@@ -170,8 +170,6 @@ lib2d = CDLL("{libpath2d}")
 lib3d = CDLL("{libpath3d}")
 libs  = CDLL("{libpaths}")
 
-MMG5_int = "c_int"
-
 MMG2D_LMAX = 1024
 
 """.format(libpath2d=os.getenv("SHARED_LIB_FILE2D"),libpath3d=os.getenv("SHARED_LIB_FILE3D"),libpaths=os.getenv("SHARED_LIB_FILES"))
