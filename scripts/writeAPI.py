@@ -38,7 +38,7 @@ class mmgEnum():
 
 class pythonAPI:
 
-    def __init__(self, namespace="mmg"):
+    def __init__(self, namespace="mmg-generated"):
         self.ns = namespace
         self.enums     = []
         self.classes   = []
