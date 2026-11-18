@@ -39,4 +39,4 @@ TAGS
 .scannerwork/*
 sonar-project.properties
 scripts/__pycache__/*
-scripts/mmg.py
+scripts/mmg-generated.py
