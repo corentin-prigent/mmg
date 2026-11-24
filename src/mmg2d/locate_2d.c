@@ -102,11 +102,11 @@ int MMG2D_cutEdge(MMG5_pMesh mesh,MMG5_pTria pt,MMG5_pPoint ppa,MMG5_pPoint ppb)
 
   /* Check whether ppa or ppb is a vertex of pt */
   for (i=0; i<3; i++) {
-    if ( fabs(la[i]-1.0) < 1.0e-12 ) {
+    if (( fabs(la[i]-1.0) < 1.0e-12 ) && ( fabs(la[MMG5_inxt2[i]]) < 1.0e-12 ) && ( fabs(la[MMG5_iprv2[i]]) < 1.0e-12 )) {
       if ( lb[i] < 0.0 ) return i+1;
       else return 0;
     }
-    if ( fabs(lb[i]-1.0) < 1.0e-12) {
+    if (( fabs(lb[i]-1.0) < 1.0e-12 ) && ( fabs(lb[MMG5_inxt2[i]]) < 1.0e-12 ) && ( fabs(lb[MMG5_iprv2[i]]) < 1.0e-12 )) {
       if ( la[i] < 0.0 ) return i+1;
       else return 0;
     }
@@ -167,21 +167,21 @@ int MMG2D_cutEdgeTriangle(MMG5_pMesh mesh,MMG5_int k,MMG5_int ia,MMG5_int ib) {
   prod3 = area3*area1;
 
   /* Both edges p2p3 and p1p3 corresponding to prod2 and prod3 are cut by edge ia,ib */
-  if ( prod1 > 0 && ((prod2 < 0 || prod3 < 0))) {
+  if ( prod1 > MMG2D_EPSD && ((prod2 < -MMG2D_EPSD || prod3 < -MMG2D_EPSD ))) {
     if ( (iare = MMG2D_cutEdge(mesh,pt,ppa,ppb)) ) {
       return iare;
     }
   }
 
   /* Both edges corresponding to prod1 and prod3 are cut by edge ia,ib */
-  if ( prod2 > 0 && ((prod1 < 0 || prod3 < 0))) {
+  if ( prod2 > MMG2D_EPSD && ((prod1 < -MMG2D_EPSD || prod3 < -MMG2D_EPSD ))) {
     if ( (iare = MMG2D_cutEdge(mesh,pt,ppa,ppb)) ) {
       return iare;
     }
   }
 
   /* Both edges corresponding to prod1 and prod2 are cut by edge ia,ib */
-  if ( prod3 > 0 && ((prod2 < 0 || prod1 < 0))) {
+  if ( prod3 > MMG2D_EPSD && ((prod2 < -MMG2D_EPSD || prod1 < -MMG2D_EPSD ))) {
     if ( (iare = MMG2D_cutEdge(mesh,pt,ppa,ppb)) ) {
       return iare;
     }
@@ -191,7 +191,7 @@ int MMG2D_cutEdgeTriangle(MMG5_pMesh mesh,MMG5_int k,MMG5_int ia,MMG5_int ib) {
   for(i=0; i<3; i++){
     if ( pt->v[i] == ia || ibreak ) {
       /* One vertex is ia, and the opposite edge is frankly crossed */
-      if ( (prod1 < 0) || (prod2 < 0) || (prod3 < 0) ) {
+      if ( (prod1 < -MMG2D_EPSD) || (prod2 < -MMG2D_EPSD) || (prod3 < -MMG2D_EPSD) ) {
         if ( (iare = MMG2D_cutEdge(mesh,pt,ppa,ppb)) ) {
           return iare;
         }
